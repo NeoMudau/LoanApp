@@ -1,5 +1,75 @@
+{# templates/admin/reports/monthly.html.twig #}
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block content %}
-    <h1>Welcome to LoanApp Dashboard</h1>
+{% block body_custom_vars %}
+    --content-max-width: 100%; 
+{% endblock %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <style>
+        .content-wrapper { padding: 0 !important; margin: 0 !important; }
+        .content { max-width: 100% !important; padding: 2rem !important; background-color: white;}
+    </style>
+{% endblock %}
+
+{% block content_title %}
+    <i class="fa fa-chart-line"></i> Loan App Dashboard
+{% endblock %}
+
+{% block main %}
+    <div class="card shadow-sm p-4">
+        <h4>Key Perfomance Indicators for {{ stats.month }}</h4>
+        <hr>
+        
+        <div class="row">
+            <!-- Card 1 -->
+            <div class="col-md-3">
+                <div class="alert alert-info h-100 mb-0"> <!-- h-100 forces equal height -->
+                    <h6 class="text-uppercase small fw-bold">New Loans Issued</h6>
+                    <p class="h3 mb-0">{{ stats.new_loans }}</p> <!-- Standardized size -->
+                </div>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="col-md-3">
+                <div class="alert alert-success h-100 mb-0">
+                    <h6 class="text-uppercase small fw-bold">Total Collected</h6>
+                    <p class="h3 mb-0">R {{ stats.collected_amount|number_format(0) }}</p>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col-md-3">
+                <div class="alert alert-info h-100 mb-0">
+                    <h6 class="text-uppercase small fw-bold">Active Loans</h6>
+                    <p class="h3 mb-0">{{ stats.totalLoans }}</p>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="col-md-3">
+                <div class="alert alert-success h-100 mb-0">
+                    <h6 class="text-uppercase small fw-bold">Monthly Interest</h6>
+                    <p class="h3 mb-0">R {{ stats.monthlyInterest|number_format(0) }}</p>
+                </div>
+            </div>
+        </div>
+
+
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Target Reach</td>
+                    <td>85%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

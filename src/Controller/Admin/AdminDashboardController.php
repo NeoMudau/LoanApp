@@ -14,37 +14,58 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
 
 #[AdminDashboard(routePath: '/admin/dashboard', routeName: 'admin')]
 class AdminDashboardController extends AbstractDashboardController
 {
+    private ChartBuilderInterface $chartBuilder;
+
+    public function __construct(
+        ChartBuilderInterface $chartBuilder,
+        
+    )
+    {
+        $this->chartBuilder = $chartBuilder;
+    }
+
     public function index(): Response
     {
-        //return parent::index();
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
 
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // 1.1) If you have enabled the "pretty URLs" feature:
-        // return $this->redirectToRoute('admin_user_index');
-        //
-        // 1.2) Same example but using the "ugly URLs" that were used in previous EasyAdmin versions:
-        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
+        $chart->setData([
+            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            'datasets' => [
+                [
+                    'label' => 'Loans Issued (R)',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'borderColor' => 'rgb(255, 99, 132)',
+                    'data' => [0, 2500, 1800, 4000, 3500, 5000],
+                ],
 
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirectToRoute('...');
-        // }
+                [
+                    'label' => 'Interest Paid (R)',
+                    'backgroundColor' => 'rgb(105, 99, 132)',
+                    'borderColor' => 'rgb(105, 99, 132)',
+                    'data' => [0, 750, 540, 1200, 1050, 1500],
+                ],
+            ],
+        ]);
 
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        return $this->render('admin_dashboard/index.html.twig', [
-        'totalLoans' => 150000,
-        'totalCustomers' => 120,
+        $monthlyStats = [
+        'new_loans' => 45,
+        'collected_amount' => 157500.50,
+        'month' => date('F Y'),
+        'totalLoans' => 157,
+        'totalCustomers' => 84,
         'overdueLoans' => 5,
-        'monthlyInterest' => 4500,
+        'monthlyInterest' => 14500,
+        ];
+
+        return $this->render('admin_dashboard/index.html.twig', [
+        'stats' => $monthlyStats,
+        'chart' => $chart,
     ]);
     }
 
