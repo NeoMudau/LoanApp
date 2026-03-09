@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 
 #[AdminDashboard(routePath: '/admin/dashboard', routeName: 'admin')]
 class AdminDashboardController extends AbstractDashboardController
@@ -70,5 +71,11 @@ class AdminDashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('Monthly Report', 'fa fa-chart-line', 'monthly_report');
         yield MenuItem::linkToRoute('Settings', 'fa fa-cogs', 'loan_settings')
             ->setPermission('ROLE_SUPER_ADMIN');
+    }
+
+    public function configureAssets(): Assets
+    {
+        return parent::configureAssets()
+            ->addAssetMapperEntry('app');
     }
 }

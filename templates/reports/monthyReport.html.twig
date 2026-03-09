@@ -1,6 +1,18 @@
 {# templates/admin/reports/monthly.html.twig #}
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
+{% block body_custom_vars %}
+    --content-max-width: 100%; 
+{% endblock %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <style>
+        .content-wrapper { padding: 0 !important; margin: 0 !important; }
+        .content { max-width: 100% !important; padding: 2rem !important; background-color: white;}
+    </style>
+{% endblock %}
+
 {% block content_title %}
     <i class="fa fa-chart-line"></i> Monthly Financial Report
 {% endblock %}
@@ -39,5 +51,24 @@
                 </tr>
             </tbody>
         </table>
+        <br>
+        <div class="card shadow-sm p-2 mt-2">
+            <h5>Loan Trends</h5>
+            
+            <!-- The Row wrapper makes items sit side-by-side -->
+            <div class="row">
+                
+                <!-- First Chart (6 out of 12 columns = 50%) -->
+                <div class="col-md-8">
+                    {{ render_chart(chart) }}
+                </div>
+
+                <!-- Second Chart (6 out of 12 columns = 50%) -->
+                <div class="col-md-4">
+                    {{ render_chart(chart2) }}
+                </div>
+                
+            </div>
+        </div>
     </div>
 {% endblock %}
