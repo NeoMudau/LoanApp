@@ -24,7 +24,7 @@ class AdminDashboardController extends AbstractDashboardController
 
     public function __construct(
         ChartBuilderInterface $chartBuilder,
-        
+
     )
     {
         $this->chartBuilder = $chartBuilder;
@@ -33,6 +33,7 @@ class AdminDashboardController extends AbstractDashboardController
     public function index(): Response
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
+        $chart2 = $this->chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
 
         $chart->setData([
             'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
@@ -53,6 +54,21 @@ class AdminDashboardController extends AbstractDashboardController
             ],
         ]);
 
+        $chart2->setData([
+            'labels' => ['Interest', 'Full'],
+            'datasets' => [
+                [
+                'label' => 'Interest vs Full Amounts paid',
+                'data' => [29, 13],
+                'backgroundColor' => [
+                    'rgb(5, 59, 232)',
+                    'rgb(14, 252, 35)',
+                ],
+                'hoverOffset' => 8
+                ],
+            ],
+        ]);
+
         $monthlyStats = [
         'new_loans' => 45,
         'collected_amount' => 157500.50,
@@ -66,6 +82,7 @@ class AdminDashboardController extends AbstractDashboardController
         return $this->render('admin_dashboard/index.html.twig', [
         'stats' => $monthlyStats,
         'chart' => $chart,
+        'chart2' => $chart2,
     ]);
     }
 

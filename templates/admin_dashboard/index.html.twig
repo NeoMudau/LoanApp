@@ -55,8 +55,21 @@
                 </div>
             </div>
         </div>
-
-
+        <br>
+        <div class="card shadow-sm p-2 mt-2">
+            <h5>Loan Trends</h5>
+            
+            <!-- The Row wrapper makes items sit side-by-side -->
+            <div class="row">
+                <div class="col-md-8">
+                    {{ render_chart(chart) }}
+                </div>
+                <div class="col-md-4">
+                    {{ render_chart(chart2) }}
+                </div>
+                
+            </div>
+        </div>
         <table class="table mt-4">
             <thead>
                 <tr>
