@@ -1,0 +1,43 @@
+{# templates/admin/reports/monthly.html.twig #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}
+    <i class="fa fa-chart-line"></i> Monthly Financial Report
+{% endblock %}
+
+{% block main %}
+    <div class="card shadow-sm p-4">
+        <h4>Performance for {{ stats.month }}</h4>
+        <hr>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="alert alert-info">
+                    <h5>New Loans Issued</h5>
+                    <p class="display-6">{{ stats.new_loans }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="alert alert-success">
+                    <h5>Total Collected</h5>
+                    <p class="display-6">R {{ stats.collected_amount|number_format(2) }}</p>
+                </div>
+            </div>
+        </div>
+
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Target Reach</td>
+                    <td>85%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

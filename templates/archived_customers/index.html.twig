@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ArchivedCustomers index{% endblock %}
+
+{% block body %}
+    <h1>ArchivedCustomers index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Reason_archived</th>
+                <th>Date_archived</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for archived_customer in archived_customers %}
+            <tr>
+                <td>{{ archived_customer.id }}</td>
+                <td>{{ archived_customer.name }}</td>
+                <td>{{ archived_customer.reasonArchived }}</td>
+                <td>{{ archived_customer.dateArchived ? archived_customer.dateArchived|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_archived_customers_show', {'id': archived_customer.id}) }}">show</a>
+                    <a href="{{ path('app_archived_customers_edit', {'id': archived_customer.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_archived_customers_new') }}">Create new</a>
+{% endblock %}

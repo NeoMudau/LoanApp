@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit ArchivedCustomers{% endblock %}
+
+{% block body %}
+    <h1>Edit ArchivedCustomers</h1>
+
+    {{ include('archived_customers/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_archived_customers_index') }}">back to list</a>
+
+    {{ include('archived_customers/_delete_form.html.twig') }}
+{% endblock %}

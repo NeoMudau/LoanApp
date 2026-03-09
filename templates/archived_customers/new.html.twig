@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New ArchivedCustomers{% endblock %}
+
+{% block body %}
+    <h1>Create new ArchivedCustomers</h1>
+
+    {{ include('archived_customers/_form.html.twig') }}
+
+    <a href="{{ path('app_archived_customers_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New HistoryCustomers{% endblock %}
+
+{% block body %}
+    <h1>Create new HistoryCustomers</h1>
+
+    {{ include('history_customers/_form.html.twig') }}
+
+    <a href="{{ path('app_history_customers_index') }}">back to list</a>
+{% endblock %}
