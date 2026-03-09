@@ -21,3 +21,17 @@ A robust loan management system built with **Symfony 7**, designed to manage bor
    ```bash
    git clone https://github.com
    cd LoanApp
+   docker compose up -d
+   composer install
+   php bin/console doctrine:migrations:migrate
+   symfony serve
+
+##🛠️ Tech Stack
+Framework: Symfony 7
+Database: PostgreSQL
+Admin Panel: EasyAdmin 4
+Containerization: Docker
+
+
+
+
