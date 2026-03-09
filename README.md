@@ -27,10 +27,10 @@ A robust loan management system built with **Symfony 7**, designed to manage bor
    symfony serve
 
 ##🛠️ Tech Stack
-Framework: Symfony 7
-Database: PostgreSQL
-Admin Panel: EasyAdmin 4
-Containerization: Docker
+- Framework: Symfony 7
+- Database: PostgreSQL
+- Admin Panel: EasyAdmin 4
+- Containerization: Docker
 
 
 
