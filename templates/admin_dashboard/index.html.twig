@@ -10,6 +10,17 @@
     <style>
         .content-wrapper { padding: 0 !important; margin: 0 !important; }
         .content { max-width: 100% !important; padding: 2rem !important; background-color: white;}
+
+        .hover-lift {
+            transition: transform 0.2s ease-in-out, shadow 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-10px); /* This "raises" it up */
+            box-shadow: 0 10px 20px rgba(81, 171, 255, 0.555) !important; /* Adds a shadow depth */
+            background-color: rgb(255, 255, 255) !important;
+        }
     </style>
 {% endblock %}
 
@@ -25,7 +36,7 @@
         <div class="row">
             <!-- Card 1 -->
             <div class="col-md-3">
-                <div class="alert alert-info h-100 mb-0"> <!-- h-100 forces equal height -->
+                <div class="alert alert-info h-100 mb-0 hover-lift"> <!-- h-100 forces equal height -->
                     <h6 class="text-uppercase small fw-bold">New Loans Issued</h6>
                     <p class="h3 mb-0">{{ stats.new_loans }}</p> <!-- Standardized size -->
                 </div>
@@ -33,7 +44,7 @@
             
             <!-- Card 2 -->
             <div class="col-md-3">
-                <div class="alert alert-success h-100 mb-0">
+                <div class="alert alert-success h-100 mb-0 hover-lift">
                     <h6 class="text-uppercase small fw-bold">Total Collected</h6>
                     <p class="h3 mb-0">R {{ stats.collected_amount|number_format(0) }}</p>
                 </div>
@@ -41,7 +52,7 @@
 
             <!-- Card 3 -->
             <div class="col-md-3">
-                <div class="alert alert-info h-100 mb-0">
+                <div class="alert alert-info h-100 mb-0 hover-lift">
                     <h6 class="text-uppercase small fw-bold">Active Loans</h6>
                     <p class="h3 mb-0">{{ stats.totalLoans }}</p>
                 </div>
@@ -49,7 +60,7 @@
 
             <!-- Card 4 -->
             <div class="col-md-3">
-                <div class="alert alert-success h-100 mb-0">
+                <div class="alert alert-success h-100 mb-0 hover-lift">
                     <h6 class="text-uppercase small fw-bold">Monthly Interest</h6>
                     <p class="h3 mb-0">R {{ stats.monthlyInterest|number_format(0) }}</p>
                 </div>
@@ -78,7 +89,19 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr class="hover-lift">
+                    <td>Target Reach</td>
+                    <td>85%</td>
+                </tr>
+                <tr class="hover-lift">
+                    <td>Target Reach</td>
+                    <td>85%</td>
+                </tr>
+                <tr class="hover-lift">
+                    <td>Target Reach</td>
+                    <td>85%</td>
+                </tr>
+                <tr class="hover-lift">
                     <td>Target Reach</td>
                     <td>85%</td>
                 </tr>
