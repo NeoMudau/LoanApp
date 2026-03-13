@@ -34,35 +34,17 @@ class PaymentsCrudController extends AbstractCrudController
 
         // 2. Get the loan
         $loan = $entityInstance->getLoanId();
-        if ($loan) {
-            $interestAmount = $loan->getInterestAmount();   // e.g., 600
-            $totalPayback = $loan->getTotalPayback();       // e.g., 2600
-            $balanceRemaining = $loan->getBalanceRemaining() ?? $totalPayback;
-
-            $paidAmount = $entityInstance->getAmountPaid();
-
-            if ($paidAmount == $interestAmount) {
-                // If only interest is paid, balance remains the same
-                $newBalance = $balanceRemaining;
-            } elseif ($paidAmount != $interestAmount) {
-                // Paid more than interest
-                $principalPaid = $paidAmount; // or subtract interest? Depending on your logic
-                $newPrincipal = $balanceRemaining - $principalPaid;
-
-                // Recalculate new balance including interest percentage
-                $interestPercent = $loan->getInterestPercent() / 100; // convert 30% to 0.3
-                $newBalance = $newPrincipal + ($newPrincipal * $interestPercent);
-            }
-            // else {
-            //     // Paid less than interest? Just subtract from balance normally
-            //     $newBalance = $balanceRemaining - $paidAmount;
-            // }
-
-            $loan->setBalanceRemaining($newBalance);
-            $entityManager->persist($loan);
+        if ($loan === null) {
+            throw new \LogicException('Payment must have a Loan assigned.');
         }
 
-        // 3. Persist the payment itself
+        // Apply payment
+        $refund = $loan->applyPayment($entityInstance->getAmountPaid());
+
+        // Add payment to the loan collection
+        $loan->addPayment($entityInstance);
+
+        $entityManager->persist($loan);
         parent::persistEntity($entityManager, $entityInstance);
     }
 }

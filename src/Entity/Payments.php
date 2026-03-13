@@ -15,7 +15,7 @@ class Payments
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'payments', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: Loan::class, inversedBy: 'payments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Loan $loan_id = null;
 
