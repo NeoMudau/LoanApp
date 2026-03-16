@@ -16,28 +16,354 @@ class LoanRepository extends ServiceEntityRepository
         parent::__construct($registry, Loan::class);
     }
 
-    //    /**
-    //     * @return Loan[] Returns an array of Loan objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('l.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function countLoans(): int
+    {
+        return (int)$this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Loan
-    //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function countActiveLoans(): int
+    {
+        return (int)$this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->where('l.status = :status')
+            ->setParameter('status', 'ACTIVE')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countClosedLoans(): int
+    {
+        return (int)$this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->where('l.status = :status')
+            ->setParameter('status', 'CLOSED')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countOverdueLoans(): int
+    {
+        return (int)$this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->where('l.status = :status')
+            ->setParameter('status', 'OVERDUE')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countLoansCreatedThisMonth(): int
+    {
+        return (int)$this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->where('MONTH(l.created_at) = MONTH(CURRENT_DATE())')
+            ->andWhere('YEAR(l.created_at) = YEAR(CURRENT_DATE())')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countLoansCreatedToday(): int
+    {
+        return (int)$this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->where('DATE(l.created_at) = CURRENT_DATE()')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function sumLoanPrincipal(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.amount)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function sumActiveLoanPrincipal(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.amount)')
+            ->where('l.status = :status')
+            ->setParameter('status', 'ACTIVE')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function sumBalanceRemaining(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.balance_remaining)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function sumInterestAmount(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.interest_amount)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function sumInterestCollected(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.interest_paid_this_month)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function sumTotalPayback(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.total_payback)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function averageLoanAmount(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('AVG(l.amount)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function averageInterestPercent(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('AVG(l.interest_percent)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function averageLoanTermMonths(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('AVG(l.loan_term_months)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function averageBalanceRemaining(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('AVG(l.balance_remaining)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function findLargestLoan(): ?Loan
+    {
+        return $this->createQueryBuilder('l')
+            ->orderBy('l.amount', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findSmallestLoan(): ?Loan
+    {
+        return $this->createQueryBuilder('l')
+            ->orderBy('l.amount', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findLatestLoan(): ?Loan
+    {
+        return $this->createQueryBuilder('l')
+            ->orderBy('l.created_at', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findOldestLoan(): ?Loan
+    {
+        return $this->createQueryBuilder('l')
+            ->orderBy('l.created_at', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findLoansClosingSoon(int $days): array
+    {
+        $date = new \DateTimeImmutable("+$days days");
+
+        return $this->createQueryBuilder('l')
+            ->where('l.closing_at <= :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findOverdueLoans(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.status = :status')
+            ->setParameter('status', 'OVERDUE')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findActiveLoans(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.status = :status')
+            ->setParameter('status', 'ACTIVE')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findClosedLoans(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.status = :status')
+            ->setParameter('status', 'CLOSED')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findLoansWithExtensions(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.extension = true')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countLoansWithExtensions(): int
+    {
+        return (int)$this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->where('l.extension = true')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getLoanStatusDistribution(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->select('l.status, COUNT(l.id) as total')
+            ->groupBy('l.status')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getLoanTermDistribution(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->select('l.loan_term_months, COUNT(l.id) as total')
+            ->groupBy('l.loan_term_months')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getInterestRateDistribution(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->select('l.interest_percent, COUNT(l.id) as total')
+            ->groupBy('l.interest_percent')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getTotalPortfolioValue(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.balance_remaining)')
+            ->where('l.status = :status')
+            ->setParameter('status', 'ACTIVE')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getPortfolioAtRisk(): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.balance_remaining)')
+            ->where('l.status = :status')
+            ->setParameter('status', 'OVERDUE')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countLoansByCustomer(int $customerId): int
+    {
+        return (int)$this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->where('l.customer_id = :customer')
+            ->setParameter('customer', $customerId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countActiveLoansByCustomer(int $customerId): int
+    {
+        return (int)$this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->where('l.customer_id = :customer')
+            ->andWhere('l.status = :status')
+            ->setParameter('customer', $customerId)
+            ->setParameter('status', 'ACTIVE')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countClosedLoansByCustomer(int $customerId): int
+    {
+        return (int)$this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->where('l.customer_id = :customer')
+            ->andWhere('l.status = :status')
+            ->setParameter('customer', $customerId)
+            ->setParameter('status', 'CLOSED')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function sumLoanAmountByCustomer(int $customerId): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.amount)')
+            ->where('l.customer_id = :customer')
+            ->setParameter('customer', $customerId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function sumBalanceByCustomer(int $customerId): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.balance_remaining)')
+            ->where('l.customer_id = :customer')
+            ->setParameter('customer', $customerId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function sumInterestByCustomer(int $customerId): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.interest_amount)')
+            ->where('l.customer_id = :customer')
+            ->setParameter('customer', $customerId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function sumCollectedByCustomer(int $customerId): float
+    {
+        return (float)$this->createQueryBuilder('l')
+            ->select('SUM(l.total_payback)')
+            ->where('l.customer_id = :customer')
+            ->setParameter('customer', $customerId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
