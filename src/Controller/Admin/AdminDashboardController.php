@@ -8,6 +8,7 @@ use App\Entity\HistoryCustomers;
 use App\Entity\Loan;
 use App\Entity\Payments;
 use App\Entity\User;
+use App\Service\LoanService;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -21,13 +22,15 @@ use Symfony\UX\Chartjs\Model\Chart;
 class AdminDashboardController extends AbstractDashboardController
 {
     private ChartBuilderInterface $chartBuilder;
+    private LoanService $loanService;
 
     public function __construct(
         ChartBuilderInterface $chartBuilder,
-
+        LoanService  $loanService,
     )
     {
         $this->chartBuilder = $chartBuilder;
+        $this->loanService = $loanService;
     }
 
     public function index(): Response
@@ -35,55 +38,56 @@ class AdminDashboardController extends AbstractDashboardController
         $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
         $chart2 = $this->chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
 
+        $adminKPI = $this->loanService->getAdminKpiSummary();
+        $adminReport = $this->loanService->getReportsSummary();
+
+        $months = ['Jan','Feb','Mar','Apr','May','Jun'];
+        $loansIssued = [];
+        $interestPaid = [];
+
+        foreach ($months as $index => $monthName) {
+            $loansIssued[] = $this->loanService->getTotalLoansIssuedForMonth($index+1);
+            $interestPaid[] = $this->loanService->getTotalInterestPaidForMonth($index+1);
+        }
+
         $chart->setData([
-            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            'labels' => $months,
             'datasets' => [
                 [
                     'label' => 'Loans Issued (R)',
                     'backgroundColor' => 'rgb(255, 99, 132)',
                     'borderColor' => 'rgb(255, 99, 132)',
-                    'data' => [0, 2500, 1800, 4000, 3500, 5000],
+                    'data' => $loansIssued,
                 ],
-
                 [
                     'label' => 'Interest Paid (R)',
                     'backgroundColor' => 'rgb(105, 99, 132)',
                     'borderColor' => 'rgb(105, 99, 132)',
-                    'data' => [0, 750, 540, 1200, 1050, 1500],
+                    'data' => $interestPaid,
                 ],
             ],
         ]);
 
         $chart2->setData([
-            'labels' => ['Interest', 'Full'],
-            'datasets' => [
-                [
-                'label' => 'Interest vs Full Amounts paid',
-                'data' => [29, 13],
-                'backgroundColor' => [
-                    'rgb(5, 59, 232)',
-                    'rgb(14, 252, 35)',
+            'labels' => ['Interest', 'Principal'],
+            'datasets' => [[
+                'label' => 'Interest vs Principal Paid',
+                'data' => [
+                    $this->loanService->getTotalInterestCollected(),
+                    $this->loanService->getTotalPrincipalCollected()
                 ],
+                'backgroundColor' => ['rgb(5, 59, 232)','rgb(14, 252, 35)'],
                 'hoverOffset' => 8
-                ],
-            ],
+            ]]
         ]);
 
-        $monthlyStats = [
-        'new_loans' => 45,
-        'collected_amount' => 157500.50,
-        'month' => date('F Y'),
-        'totalLoans' => 157,
-        'totalCustomers' => 84,
-        'overdueLoans' => 5,
-        'monthlyInterest' => 14500,
-        ];
-
         return $this->render('admin_dashboard/index.html.twig', [
-        'stats' => $monthlyStats,
-        'chart' => $chart,
-        'chart2' => $chart2,
-    ]);
+            'adminKPI' => $adminKPI,
+            'adminReport' => $adminReport,
+            'currentMonth' => date('F'),
+            'chart' => $chart,
+            'chart2' => $chart2,
+        ]);
     }
 
     public function configureDashboard(): Dashboard

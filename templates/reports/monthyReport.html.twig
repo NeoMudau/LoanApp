@@ -12,13 +12,14 @@
         .content { max-width: 100% !important; padding: 2rem !important; background-color: white;}
 
         .hover-lift {
-            transition: transform 0.5s ease-in-out, shadow 0.2s ease-in-out;
+            transition: transform 0.2s ease-in-out, shadow 0.2s ease-in-out;
             cursor: pointer;
         }
 
         .hover-lift:hover {
             transform: translateY(-10px); /* This "raises" it up */
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; /* Adds a shadow depth */
+            box-shadow: 0 10px 20px rgba(81, 171, 255, 0.555) !important; /* Adds a shadow depth */
+            background-color: rgb(255, 255, 255) !important;
         }
     </style>
 {% endblock %}
@@ -29,21 +30,25 @@
 
 {% block main %}
     <div class="card shadow-sm p-4">
-        <h4>Performance for {{ stats.month }}</h4>
+        <h4>Key Perfomance Indicators for {{ currentMonth }}</h4>
         <hr>
         
         <div class="row">
             <div class="col-md-6">
-                <div class="alert alert-info hover-lift">
-                    <h5>New Loans Issued</h5>
-                    <p class="display-6">{{ stats.new_loans }}</p>
-                </div>
+                <a href="#">
+                    <div class="alert alert-info hover-lift">
+                        <h6 class="text-uppercase small fw-bold">Total Loans Issued</h6>
+                        <p class="h3 mb-0">{{ reportSummary.total_loans }}</p>
+                    </div>
+                </a>
             </div>
             <div class="col-md-6">
-                <div class="alert alert-success hover-lift">
-                    <h5>Total Collected</h5>
-                    <p class="display-6">R {{ stats.collected_amount|number_format(2) }}</p>
-                </div>
+                <a href="#">
+                    <div class="alert alert-success hover-lift">
+                        <h6 class="text-uppercase small fw-bold">Total Active Loans</h6>
+                        <p class="h3 mb-0">{{ reportSummary.active_loans|number_format(0) }}</p>
+                    </div>
+                </a>
             </div>
         </div>
         <br>
@@ -52,17 +57,12 @@
             
             <!-- The Row wrapper makes items sit side-by-side -->
             <div class="row">
-                
-                <!-- First Chart (6 out of 12 columns = 50%) -->
                 <div class="col-md-8">
                     {{ render_chart(chart) }}
                 </div>
-
-                <!-- Second Chart (6 out of 12 columns = 50%) -->
                 <div class="col-md-4">
                     {{ render_chart(chart2) }}
                 </div>
-                
             </div>
         </div>
         <table class="table mt-4">
@@ -73,10 +73,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="hover-lift">
-                    <td>Target Reach</td>
-                    <td>85%</td>
-                </tr>
+                {% for metric, value in reportSummary %}
+                    <tr class="hover-lift">
+                        <td>{{ metric }}</td>
+                        <td>{{ value|number_format(0) }}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

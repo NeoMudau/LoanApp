@@ -1,0 +1,35 @@
+{# templates/admin/reports/monthly.html.twig #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block body_custom_vars %}
+    --content-max-width: 100%; 
+{% endblock %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <style>
+        .content-wrapper { padding: 0 !important; margin: 0 !important; }
+        .content { max-width: 100% !important; padding: 2rem !important; background-color: white;}
+
+        .hover-lift {
+            transition: transform 0.5s ease-in-out, shadow 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-10px); /* This "raises" it up */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; /* Adds a shadow depth */
+        }
+    </style>
+{% endblock %}
+
+{% block content_title %}
+    <i class="fa fa-chart-line"></i> Overdue Loans Report
+{% endblock %}
+
+{% block main %}
+    <div class="card shadow-sm p-4">
+        {# content goes here #} 
+        <h1>Overdue Loans</h1>
+    </div>
+{% endblock %}

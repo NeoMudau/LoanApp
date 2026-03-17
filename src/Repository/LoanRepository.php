@@ -54,21 +54,32 @@ class LoanRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function countLoansCreatedThisMonth(): int
+    public function getTotalLoansIssuedForMonth(int $month, ?int $year = null): int
     {
-        return (int)$this->createQueryBuilder('l')
+        $year ??= (int) date('Y');
+
+        $start = new \DateTimeImmutable("$year-$month-01 00:00:00");
+        $end = $start->modify('last day of this month')->setTime(23, 59, 59);
+
+        return (int) $this->createQueryBuilder('l')
             ->select('COUNT(l.id)')
-            ->where('MONTH(l.created_at) = MONTH(CURRENT_DATE())')
-            ->andWhere('YEAR(l.created_at) = YEAR(CURRENT_DATE())')
+            ->where('l.created_at BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->getQuery()
             ->getSingleScalarResult();
     }
 
     public function countLoansCreatedToday(): int
     {
-        return (int)$this->createQueryBuilder('l')
+        $start = new \DateTimeImmutable('today 00:00:00');
+        $end = new \DateTimeImmutable('today 23:59:59');
+
+        return (int) $this->createQueryBuilder('l')
             ->select('COUNT(l.id)')
-            ->where('DATE(l.created_at) = CURRENT_DATE()')
+            ->where('l.created_at BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -366,4 +377,71 @@ class LoanRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function getTotalPrincipalCollected(): float
+    {
+        return (float) $this->createQueryBuilder('l')
+            ->select('SUM(l.total_payback - l.interest_amount)') // principal = total_payback - interest
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getTotalPrincipalIssued(): float
+    {
+        return (float) $this->createQueryBuilder('l')
+            ->select('SUM(l.amount)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getTotalInterestCollected(): float
+    {
+        return (float) $this->createQueryBuilder('l')
+            ->select('SUM(l.interest_paid_this_month)') // adjust if you track differently
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getLoansIssuedByMonth(int $month, int $year): float
+    {
+        $start = new \DateTimeImmutable("first day of $year-$month 00:00:00");
+        $end = new \DateTimeImmutable("last day of $year-$month 23:59:59");
+
+        return (float) $this->createQueryBuilder('l')
+            ->select('SUM(l.amount)')
+            ->where('l.created_at BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getInterestPaidByMonth(int $month, int $year): float
+    {
+        $start = new \DateTimeImmutable("first day of $year-$month 00:00:00");
+        $end = new \DateTimeImmutable("last day of $year-$month 23:59:59");
+
+        return (float) $this->createQueryBuilder('l')
+            ->select('SUM(l.interest_paid_this_month)')
+            ->where('l.created_at BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countLoansCreatedThisMonth(): int
+    {
+        $start = new \DateTimeImmutable('first day of this month 00:00:00');
+        $end = new \DateTimeImmutable('last day of this month 23:59:59');
+
+        return (int) $this->createQueryBuilder('l')
+            ->select('COUNT(l.id)')
+            ->where('l.created_at BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 }

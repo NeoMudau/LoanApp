@@ -76,6 +76,7 @@ class LoanCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            NumberField::new('id'),
 
             AssociationField::new('customer_id', 'Customer'),
 

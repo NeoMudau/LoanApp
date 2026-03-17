@@ -30,40 +30,48 @@
 
 {% block main %}
     <div class="card shadow-sm p-4">
-        <h4>Key Perfomance Indicators for {{ stats.month }}</h4>
+        <h4>Key Perfomance Indicators for {{ currentMonth }}</h4>
         <hr>
         
         <div class="row">
             <!-- Card 1 -->
             <div class="col-md-3">
+                <a href="">
                 <div class="alert alert-info h-100 mb-0 hover-lift"> <!-- h-100 forces equal height -->
-                    <h6 class="text-uppercase small fw-bold">New Loans Issued</h6>
-                    <p class="h3 mb-0">{{ stats.new_loans }}</p> <!-- Standardized size -->
+                    <h6 class="text-uppercase small fw-bold">Total Loans Issued</h6>
+                    <p class="h3 mb-0">{{ adminKPI.total_loans }}</p>
                 </div>
+                </a>
             </div>
             
             <!-- Card 2 -->
             <div class="col-md-3">
+                <a href="">
                 <div class="alert alert-success h-100 mb-0 hover-lift">
-                    <h6 class="text-uppercase small fw-bold">Total Collected</h6>
-                    <p class="h3 mb-0">R {{ stats.collected_amount|number_format(0) }}</p>
+                    <h6 class="text-uppercase small fw-bold">Total Active Loans</h6>
+                    <p class="h3 mb-0">{{ adminKPI.active_loans|number_format(0) }}</p>
                 </div>
+                </a>
             </div>
 
             <!-- Card 3 -->
             <div class="col-md-3">
+                <a href="#">
                 <div class="alert alert-info h-100 mb-0 hover-lift">
-                    <h6 class="text-uppercase small fw-bold">Active Loans</h6>
-                    <p class="h3 mb-0">{{ stats.totalLoans }}</p>
+                    <h6 class="text-uppercase small fw-bold">Total Overdue Loans</h6>
+                    <p class="h3 mb-0">{{ adminKPI.overdue_loans|number_format(0) }}</p>
                 </div>
+                </a>
             </div>
 
             <!-- Card 4 -->
             <div class="col-md-3">
+                <a href="">
                 <div class="alert alert-success h-100 mb-0 hover-lift">
-                    <h6 class="text-uppercase small fw-bold">Monthly Interest</h6>
-                    <p class="h3 mb-0">R {{ stats.monthlyInterest|number_format(0) }}</p>
+                    <h6 class="text-uppercase small fw-bold">Total Closed Loans</h6>
+                    <p class="h3 mb-0">{{ adminKPI.closed_loans|number_format(0) }}</p>
                 </div>
+                </a>
             </div>
         </div>
         <br>
@@ -89,22 +97,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="hover-lift">
-                    <td>Target Reach</td>
-                    <td>85%</td>
-                </tr>
-                <tr class="hover-lift">
-                    <td>Target Reach</td>
-                    <td>85%</td>
-                </tr>
-                <tr class="hover-lift">
-                    <td>Target Reach</td>
-                    <td>85%</td>
-                </tr>
-                <tr class="hover-lift">
-                    <td>Target Reach</td>
-                    <td>85%</td>
-                </tr>
+                {% for metric, value in adminKPI %}
+                    <tr class="hover-lift">
+                        <td>{{ metric }}</td>
+                        <td>{{ value|number_format(2) }}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\LoanService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -10,10 +11,27 @@ use Symfony\UX\Chartjs\Model\Chart;
 
 final class ReportsController extends AbstractController
 {
+    private LoanService $loanService;
+
+    public function __construct(
+        LoanService  $loanService,
+    )
+    {
+        $this->loanService = $loanService;
+    }
+    
     #[Route('/reports', name: 'app_reports')]
     public function index(): Response
     {
         return $this->render('reports/index.html.twig', [
+            'controller_name' => 'ReportsController',
+        ]);
+    }
+
+    #[Route('/reports/overdue', name: 'overdue_loans')]
+    public function generateOverdueLoansReport(): Response
+    {
+        return $this->render('reports/overdue.html.twig', [
             'controller_name' => 'ReportsController',
         ]);
     }
@@ -24,38 +42,46 @@ final class ReportsController extends AbstractController
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart2 = $chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
 
+        $reportSummary = $this->loanService->getReportsSummary();
+
+        $months = ['Jan','Feb','Mar','Apr','May','Jun'];
+        $loansIssued = [];
+        $interestPaid = [];
+
+        foreach ($months as $index => $monthName) {
+            $loansIssued[] = $this->loanService->getTotalLoansIssuedForMonth($index+1);
+            $interestPaid[] = $this->loanService->getTotalInterestPaidForMonth($index+1);
+        }
+
         $chart->setData([
-            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            'labels' => $months,
             'datasets' => [
                 [
                     'label' => 'Loans Issued (R)',
                     'backgroundColor' => 'rgb(255, 99, 132)',
                     'borderColor' => 'rgb(255, 99, 132)',
-                    'data' => [0, 2500, 1800, 4000, 3500, 5000],
+                    'data' => $loansIssued,
                 ],
-
                 [
                     'label' => 'Interest Paid (R)',
                     'backgroundColor' => 'rgb(105, 99, 132)',
                     'borderColor' => 'rgb(105, 99, 132)',
-                    'data' => [0, 750, 540, 1200, 1050, 1500],
+                    'data' => $interestPaid,
                 ],
             ],
         ]);
 
         $chart2->setData([
-            'labels' => ['Female', 'Male'],
-            'datasets' => [
-                [
-                'label' => 'Gender',
-                'data' => [12, 33],
-                'backgroundColor' => [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
+            'labels' => ['Interest', 'Principal'],
+            'datasets' => [[
+                'label' => 'Interest vs Principal Paid',
+                'data' => [
+                    $this->loanService->getTotalInterestCollected(),
+                    $this->loanService->getTotalPrincipalCollected()
                 ],
+                'backgroundColor' => ['rgb(5, 59, 232)','rgb(14, 252, 35)'],
                 'hoverOffset' => 8
-                ],
-            ],
+            ]]
         ]);
 
         $monthlyStats = [
@@ -66,9 +92,10 @@ final class ReportsController extends AbstractController
 
         return $this->render('reports/monthyReport.html.twig', [
             'controller_name' => 'ReportsController',
+            'currentMonth' => date('F'),
             'chart' => $chart,
             'chart2' => $chart2,
-            'stats' => $monthlyStats,
+            'reportSummary' => $reportSummary,
         ]);
     }
 }

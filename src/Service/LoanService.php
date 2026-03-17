@@ -2,8 +2,20 @@
 
 namespace App\Service;
 
+use App\Repository\LoanRepository;
+
 class LoanService
 {
+    private LoanRepository $loanRepository;
+
+    public function __construct
+    (
+        LoanRepository  $loanRepository,
+    )
+    {
+        $this->loanRepository = $loanRepository;
+    }
+
     public function getTotalLoans(): int
     {
         return $this->loanRepository->countLoans();
@@ -62,11 +74,6 @@ class LoanService
     public function getTotalAmountCollected(): float
     {
         return $this->loanRepository->sumTotalPayback();
-    }
-
-    public function getTotalInterestCollected(): float
-    {
-        return $this->loanRepository->sumInterestCollected();
     }
 
     public function getTotalBalanceRemaining(): float
@@ -156,12 +163,35 @@ class LoanService
         return $this->loanRepository->getInterestRateDistribution();
     }
 
+    public function getTotalPrincipalCollected(): float
+    {
+        return $this->loanRepository->getTotalPrincipalCollected();
+    }
+
+    public function getTotalInterestCollected(): float
+    {
+        return $this->loanRepository->getTotalInterestCollected();
+    }
+
+    public function getTotalLoansIssuedForMonth(int $month, ?int $year = null): float
+    {
+        $year ??= (int)date('Y');
+        return $this->loanRepository->getLoansIssuedByMonth($month, $year);
+    }
+
+    public function getTotalInterestPaidForMonth(int $month, ?int $year = null): float
+    {
+        $year ??= (int)date('Y');
+        return $this->loanRepository->getInterestPaidByMonth($month, $year);
+    }
+
     public function getAdminKpiSummary(): array
     {
         return [
             'total_loans' => $this->loanRepository->countLoans(),
             'active_loans' => $this->loanRepository->countActiveLoans(),
             'overdue_loans' => $this->loanRepository->countOverdueLoans(),
+            'closed_loans' => $this->loanRepository->countClosedLoans(),
             'principal_issued' => $this->loanRepository->sumLoanPrincipal(),
             'balance_remaining' => $this->loanRepository->sumBalanceRemaining(),
             'interest_collected' => $this->loanRepository->sumInterestCollected(),
