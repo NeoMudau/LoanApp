@@ -300,26 +300,6 @@ class Loan
         $this->status = 'ACTIVE';
     }
 
-    public function applyPayment(float $paidAmount): float
-    {
-        $refund = 0;
-
-        // Track running total of all payments ever made
-        $this->total_payback = ($this->total_payback ?? 0) + $paidAmount;
-
-        // Only immediate action: full payoff closes the loan right away
-        if ($this->balance_remaining !== null && $paidAmount >= $this->balance_remaining) {
-            $refund = round($paidAmount - $this->balance_remaining, 2);
-            $this->amount = 0;
-            $this->balance_remaining = 0;
-            $this->interest_amount = 0;
-            $this->status = 'CLOSED';
-        }
-
-        $this->updated_at = new \DateTimeImmutable();
-        return $refund;
-    }
-
     public function rolloverMonth(): array
     {
         // Skip closed loans
@@ -362,7 +342,7 @@ class Loan
             $this->amount = round($this->amount + $shortfall, 2);
             $this->interest_amount = round($this->amount * ($this->interest_percent / 100), 2);
             $this->balance_remaining = round($this->amount + $this->interest_amount, 2);
-            $this->extendLoan(30);
+            $this->extendLoan(1);
             $result['case'] = 'shortfall';
             $result['shortfall_added'] = $shortfall;
 
@@ -371,7 +351,7 @@ class Loan
             // Principal untouched, just extend
             $this->interest_amount = $monthlyInterest;
             $this->balance_remaining = round($this->amount + $this->interest_amount, 2);
-            $this->extendLoan(30);
+            $this->extendLoan(1);
             $result['case'] = 'interest_only';
 
         } else {
@@ -393,7 +373,7 @@ class Loan
                 $this->amount = $newPrincipal;
                 $this->interest_amount = round($newPrincipal * ($this->interest_percent / 100), 2);
                 $this->balance_remaining = round($newPrincipal + $this->interest_amount, 2);
-                $this->extendLoan(30);
+                $this->extendLoan(1);
                 $result['case'] = 'partial_principal';
             }
         }
@@ -408,11 +388,10 @@ class Loan
         return $result;
     }
 
-    private function extendLoan(int $days): void
+    private function extendLoan(int $months): void
     {
         $this->closing_at = $this->closing_at
-            ? $this->closing_at->modify("+{$days} days")
-            : (new \DateTimeImmutable())->modify("+{$days} days");
+            ? $this->closing_at->modify("+{$months} months")
+            : (new \DateTimeImmutable())->modify("+{$months} months");
     }
-
 }

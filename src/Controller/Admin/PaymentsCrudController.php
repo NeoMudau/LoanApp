@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Payments;
+use App\Service\LoanService;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -11,6 +12,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 
 class PaymentsCrudController extends AbstractCrudController
 {
+    private LoanService $loanService;
+
+    public function __construct(LoanService $loanService) {
+        $this->loanService = $loanService;
+    }
+
     public static function getEntityFqcn(): string
     {
         return Payments::class;
@@ -39,7 +46,7 @@ class PaymentsCrudController extends AbstractCrudController
         }
 
         // Apply payment
-        $refund = $loan->applyPayment($entityInstance->getAmountPaid());
+        $refund = $this->loanService->applyPayment($loan , $entityInstance->getAmountPaid());
 
         // Add payment to the loan collection
         $loan->addPayment($entityInstance);

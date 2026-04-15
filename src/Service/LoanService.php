@@ -2,18 +2,24 @@
 
 namespace App\Service;
 
+use App\Entity\Loan;
 use App\Repository\LoanRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class LoanService
 {
     private LoanRepository $loanRepository;
+    private EntityManagerInterface $entityManager;
+
 
     public function __construct
     (
         LoanRepository  $loanRepository,
+        EntityManagerInterface $entityManager,
     )
     {
         $this->loanRepository = $loanRepository;
+        $this->entityManager = $entityManager;
     }
 
     public function getTotalLoans(): int
@@ -236,5 +242,29 @@ class LoanService
             'interest_total' => $this->loanRepository->sumInterestByCustomer($customerId),
             'total_paid' => $this->loanRepository->sumCollectedByCustomer($customerId)
         ];
+    }
+
+    public function applyPayment(Loan $loan, float $paidAmount): float
+    {
+        $refund = 0;
+
+        // Track running total of all payments ever made
+        $loan->setTotalPayback($loan->getTotalPayback() ?? 0 + $paidAmount);
+
+        // Only immediate action: full payoff closes the loan right away
+        $balanceRemaining = $loan->getBalanceRemaining();
+        if ($balanceRemaining !== null && $paidAmount >= $balanceRemaining) {
+            $refund = round($paidAmount - $balanceRemaining, 2);
+            $loan->setAmount(0);
+            $loan->setBalanceRemaining(0);
+            $loan->setInterestAmount(0);
+            $loan->setStatus('CLOSED');
+        }
+
+        $loan->setUpdatedAt(new \DateTimeImmutable());
+        
+        $this->entityManager->persist($loan);
+        $this->entityManager->flush();
+        return $refund;
     }
 }
