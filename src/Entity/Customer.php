@@ -42,6 +42,9 @@ class Customer
     #[ORM\OneToMany(targetEntity: HistoryCustomers::class, mappedBy: 'customer_id')]
     private Collection $historyCustomers;
 
+    #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
+    private ?Address $address = null;
+
     public function __construct()
     {
         $this->loans = new ArrayCollection();
@@ -176,6 +179,23 @@ class Customer
                 $historyCustomer->setCustomerId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(Address $address): static
+    {
+        // set the owning side of the relation if necessary
+        if ($address->getCustomer() !== $this) {
+            $address->setCustomer($this);
+        }
+
+        $this->address = $address;
 
         return $this;
     }
