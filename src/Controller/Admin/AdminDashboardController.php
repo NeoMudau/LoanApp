@@ -41,7 +41,7 @@ class AdminDashboardController extends AbstractDashboardController
         $adminKPI = $this->loanService->getAdminKpiSummary();
         $adminReport = $this->loanService->getReportsSummary();
 
-        $months = ['Jan','Feb','Mar','Apr','May','Jun'];
+        $months = ['Jan','Feb','Mar','Apr','May'];
         $loansIssued = [];
         $interestPaid = [];
 
@@ -69,14 +69,14 @@ class AdminDashboardController extends AbstractDashboardController
         ]);
 
         $chart2->setData([
-            'labels' => ['Interest', 'Principal'],
+            'labels' => ['Collected', 'Issued'],
             'datasets' => [[
                 'label' => 'Interest vs Principal Paid',
                 'data' => [
-                    $this->loanService->getTotalInterestCollected(),
-                    $this->loanService->getTotalPrincipalCollected()
+                    $this->loanService->getTotalPrincipalCollected(),
+                    $this->loanService->getTotalPrincipalIssued()
                 ],
-                'backgroundColor' => ['rgb(5, 59, 232)','rgb(14, 252, 35)'],
+                'backgroundColor' => ['rgb(25, 129, 132)','rgb(14, 252, 35)'],
                 'hoverOffset' => 8
             ]]
         ]);

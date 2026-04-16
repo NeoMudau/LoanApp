@@ -37,7 +37,7 @@
             <!-- Card 1 -->
             <div class="col-md-3">
                 <a href="">
-                <div class="alert alert-info h-100 mb-0 hover-lift"> <!-- h-100 forces equal height -->
+                <div class="alert alert-info h-100 mb-0 rounded hover-lift"> <!-- h-100 forces equal height -->
                     <h6 class="text-uppercase small fw-bold">Total Loans Issued</h6>
                     <p class="h3 mb-0">{{ adminKPI.total_loans }}</p>
                 </div>
@@ -47,7 +47,7 @@
             <!-- Card 2 -->
             <div class="col-md-3">
                 <a href="">
-                <div class="alert alert-success h-100 mb-0 hover-lift">
+                <div class="alert alert-success h-100 mb-0 rounded hover-lift">
                     <h6 class="text-uppercase small fw-bold">Total Active Loans</h6>
                     <p class="h3 mb-0">{{ adminKPI.active_loans|number_format(0) }}</p>
                 </div>
@@ -57,7 +57,7 @@
             <!-- Card 3 -->
             <div class="col-md-3">
                 <a href="#">
-                <div class="alert alert-info h-100 mb-0 hover-lift">
+                <div class="alert alert-info h-100 mb-0 rounded hover-lift">
                     <h6 class="text-uppercase small fw-bold">Total Overdue Loans</h6>
                     <p class="h3 mb-0">{{ adminKPI.overdue_loans|number_format(0) }}</p>
                 </div>
@@ -67,7 +67,7 @@
             <!-- Card 4 -->
             <div class="col-md-3">
                 <a href="">
-                <div class="alert alert-success h-100 mb-0 hover-lift">
+                <div class="alert alert-success h-100 mb-0 rounded hover-lift">
                     <h6 class="text-uppercase small fw-bold">Total Closed Loans</h6>
                     <p class="h3 mb-0">{{ adminKPI.closed_loans|number_format(0) }}</p>
                 </div>
@@ -76,14 +76,16 @@
         </div>
         <br>
         <div class="card shadow-sm p-2 mt-2">
-            <h5>Loan Trends</h5>
+            <h5>Trends</h5>
             
             <!-- The Row wrapper makes items sit side-by-side -->
             <div class="row">
                 <div class="col-md-8">
+                    <h6>Loan | Interest</h6>
                     {{ render_chart(chart) }}
                 </div>
                 <div class="col-md-4">
+                    <h6>Principal Amount</h6>
                     {{ render_chart(chart2) }}
                 </div>
                 
