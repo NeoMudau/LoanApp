@@ -26,6 +26,9 @@ class EmploymentDetails
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
 
+    #[ORM\Column]
+    private ?float $salary = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class EmploymentDetails
     public function setCustomer(Customer $customer): static
     {
         $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getSalary(): ?float
+    {
+        return $this->salary;
+    }
+
+    public function setSalary(float $salary): static
+    {
+        $this->salary = $salary;
 
         return $this;
     }

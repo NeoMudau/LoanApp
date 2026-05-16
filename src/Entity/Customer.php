@@ -25,9 +25,6 @@ class Customer
     private ?string $phone = null;
 
     #[ORM\Column]
-    private ?float $salary = null;
-
-    #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\OneToOne(targetEntity: User::class)]
@@ -104,18 +101,6 @@ class Customer
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
-
-        return $this;
-    }
-
-    public function getSalary(): ?float
-    {
-        return $this->salary;
-    }
-
-    public function setSalary(float $salary): static
-    {
-        $this->salary = $salary;
 
         return $this;
     }
