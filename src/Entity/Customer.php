@@ -30,6 +30,21 @@ class Customer
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
+    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
+
     /**
      * @var Collection<int, Loan>
      */
