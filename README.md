@@ -2,6 +2,14 @@
 
 A robust loan management system built with **Symfony 7**, designed to manage borrowers, loan applications, and financial reporting.
 
+# ✨ Attention
+- This project is under developmetn, some pages are static and not using data from the database 
+- such as numbers counted and calculations done for presentation
+- Some front end pages are created using Ai for now to avoid having blank pages,
+- as the project continues front-end pages will be replaced manually t0 showcase my front end skills
+- Automatic (CRON) calculations such as the accumulation of dept is done is seconds instead of monthly
+- to avoid delays during presentation phase 
+
 ## ✨ Features
 - **Admin Dashboard:** Powered by EasyAdmin for managing customers and loans.
 - **Role-Based Security:** Separate access for Super Admins, Admins, and Borrowers.
