@@ -63,7 +63,7 @@
        PAGE WRAPPER
     ───────────────────────────────────────── */
     .page-wrap {
-        max-width: 1280px;
+        width: 100%;
         margin: 0 auto;
         padding: 2rem 2rem 0;
         display: flex;
@@ -583,14 +583,6 @@
       <option>Student Loan</option>
     </select>
 
-    <select class="filter-select">
-      <option value="">Date range</option>
-      <option>Last 7 days</option>
-      <option>Last 30 days</option>
-      <option>This quarter</option>
-      <option>This year</option>
-    </select>
-
     <div class="filter-divider"></div>
 
     <div class="filter-pill-group">
@@ -599,26 +591,16 @@
       <button class="pill" onclick="filterPill(this,'pending')">Pending</button>
       <button class="pill" onclick="filterPill(this,'review')">In Review</button>
       <button class="pill" onclick="filterPill(this,'closed')">Closed</button>
-      <button class="pill" onclick="filterPill(this,'rejected')">Rejected</button>
     </div>
 
-    <div class="filter-right">
-      {# REPLACE: {{ loans|length }} results #}
-      <span class="results-count">Showing <strong>12 438</strong> loans</span>
-    </div>
   </div>
 
 
   {# ── LOAN TABLE ── #}
   <div class="loan_table">
-
     <div class="table-head">
       <span class="th">
-        Borrower
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
-      </span>
-      <span class="th">
-        Type
+        Term
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
       </span>
       <span class="th">
@@ -633,21 +615,11 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
       </span>
       <span class="th">Status</span>
-      <span class="th"></span>
+      <span class="th">Action</span>
     </div>
 
     {% for loan in loans %}
     <div class="loan-row">
-
-    <div class="borrower">
-        <div class="avatar av-blue">
-        {{ loan.customerId.name[0]|upper }}{{ loan.customerId.surname[0]|upper }}
-        </div>
-        <div class="borrower-info">
-        <div class="name">{{ loan.customerId.name }} {{ loan.customerId.surname }}</div>
-        <div class="ref">#QL-{{ loan.id }}</div>
-        </div>
-    </div>
 
     <div class="td">{{ loan.loanTermMonths }} month{{ loan.loanTermMonths > 1 ? 's' : '' }}</div>
 
@@ -655,27 +627,31 @@
 
     <div class="td">
         {% set paid = loan.totalPayback - loan.balanceRemaining %}
-        {% set pct  = loan.totalPayback > 0 ? ((paid / loan.totalPayback) * 100)|round : 0 %}
+        {% set pct = loan.totalPayback > 0 ? ((paid / loan.totalPayback) * 100)|round : 0 %}
+
         <div class="progress-wrap">
-        <div class="progress-bar">
-            <div class="progress-fill fill-green" style="width: {{ pct }}%"></div>
-        </div>
-        <span class="progress-pct">{{ pct }}%</span>
+            <div class="progress-bar">
+                <div class="progress-fill fill-green" style="width: {{ pct }}%;"></div>
+            </div>
+
+            <span class="progress-pct">{{ pct }}%</span>
         </div>
     </div>
 
     <div class="td">{{ loan.closingAt ? loan.closingAt|date('d M Y') : '—' }}</div>
 
     <div class="td">
-        <span class="badge badge-{{ loan.status|lower }}">{{ loan.status }}</span>
+        <span class="badge badge-{{ loan.status|lower }}">
+            {{ loan.status }}
+        </span>
     </div>
 
     <div class="td">
-        <a href="{{ path('loan_detail', {id: loan.id}) }}" class="row-action">
-        View
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
+        <a href="#" class="row-action">
+            View
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
         </a>
     </div>
 
