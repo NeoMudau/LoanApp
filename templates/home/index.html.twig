@@ -569,7 +569,7 @@
 
 {# ── NAVBAR ── #}
 <nav>
-  <div class="nav-logo">Quick<span>Loan</span></div>
+  <div class="nav-logo"><a href="{{ path('app_home') }}">Quick<span>Loan</span></a></div>
   <ul class="nav-links">
     <li><a href="#rates">Rates</a></li>
     <li><a href="#how">How It Works</a></li>
@@ -881,8 +881,8 @@
       <h4>Company</h4>
       <a href="#">About Us</a>
       <a href="#">How It Works</a>
-      <a href="#">Careers</a>
-      <a href="#">Contact</a>
+      <a href="{{ path('app_careers') }}">Careers</a>
+      <a href="{{ path('app_contact') }}">Contact</a>
     </div>
     <div class="footer-col">
       <h4>Legal</h4>
