@@ -24,28 +24,23 @@ A loan management system built with **Symfony** and **PostgreSQL**. Administrato
 
 **Login page**
 
-<!-- ![Login page](docs/screenshots/login.png) -->
-> 📸 Screenshot to add: `docs/screenshots/login.png`
+![Login page](docs/screenshots/login.png)
 
 **Admin dashboard**
 
-<!-- ![Admin dashboard](docs/screenshots/admin-dashboard.png) -->
-> 📸 Screenshot to add: `docs/screenshots/admin-dashboard.png`
+![Admin dashboard](docs/screenshots/admin-dashboard.png)
 
 **Customers list**
 
-<!-- ![Customers list](docs/screenshots/customers.png) -->
-> 📸 Screenshot to add: `docs/screenshots/customers.png`
+![Customers list](docs/screenshots/customers.png)
 
 **Loan details**
 
-<!-- ![Loan details](docs/screenshots/loan-details.png) -->
-> 📸 Screenshot to add: `docs/screenshots/loan-details.png`
+![Loan details](docs/screenshots/loan-details.png)
 
 **Reports page**
 
-<!-- ![Reports page](docs/screenshots/reports.png) -->
-> 📸 Screenshot to add: `docs/screenshots/reports.png`
+![Reports page](docs/screenshots/reports.png)
 
 ## What works today
 
