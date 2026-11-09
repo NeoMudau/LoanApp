@@ -7,8 +7,7 @@ A loan management system built with **Symfony** and **PostgreSQL**. Administrato
 - such as numbers counted and calculations done for presentation
 - Some front end pages are created using Ai for now to avoid having blank pages,
 - as the project continues front-end pages will be replaced manually t0 showcase my front end skills
-- Automatic (CRON) calculations such as the accumulation of dept is done is seconds instead of monthly
-- to avoid delays during presentation phase 
+- Automatic (CRON) calculations such as the accumulation of dept is done is seconds instead of monthly, to avoid delays during presentation phase 
 
 ## ✨ Features
 - **Admin Dashboard:** Powered by EasyAdmin for managing customers and loans.
