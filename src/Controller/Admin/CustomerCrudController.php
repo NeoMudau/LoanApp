@@ -28,7 +28,6 @@ class CustomerCrudController extends AbstractCrudController
             TextField::new('name', 'First Name'),
             TextField::new('surname', 'Last Name'),
             TelephoneField::new('phone', 'Phone Number'),
-            NumberField::new('salary', 'Monthly Salary'),
 
             DateTimeField::new('created_at')
                 ->hideOnForm()   // auto-set, not editable
