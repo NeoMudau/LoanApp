@@ -58,9 +58,6 @@ A loan management system built with **Symfony** and **PostgreSQL**. Administrato
 These are real gaps that I am fixing. I remove each item once it is done.
 
 - [ ] The migrations only create the user tables, so the customer, loan and payment tables need `doctrine:schema:create` for now (see the setup steps).
-- [ ] The dashboard menu has "Overdue Loans" and "Settings" links to pages that are not built yet.
-- [ ] The monthly report shows sample numbers, not data from the database.
-- [ ] The super admin role name is written two different ways (`ROLE_SUPERADMIN` and `ROLE_SUPER_ADMIN`), so the demo super admin account may not reach the admin screens.
 - [ ] A loan can have only one payment record. This should allow many.
 - [ ] A newly registered user has no customer profile and no borrower area yet.
 - [ ] There are no automated tests.
