@@ -1,131 +1,179 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register | QuickLoan{% endblock %}
 
 {% block body %}
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-tr from-blue-900 via-indigo-900 to-green-800 p-4">
-    <div class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden p-8 text-blue-100">
-        {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-        {% endfor %}
 
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-white tracking-light">Register</h1>
-            <p class="text-blue-200 mt-2">Welcome! Please enter your details.</p>
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-header">
+            <h1>Create Account</h1>
+            <p>Welcome to QuickLoan. Enter your details to get started.</p>
         </div>
 
+        {# Email verification errors #}
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="auth-error" style="margin-bottom: 1rem;">
+                {{ flash_error }}
+            </div>
+        {% endfor %}
+
+        {# General form errors #}
         {% if form_errors(registrationForm) %}
-            <div class="mb-6 p-4 rounded-lg bg-red-500/20 border border-red-500/40 text-red-100 text-sm text-center">
+            <div class="auth-error" style="margin-bottom: 1rem;">
                 {{ form_errors(registrationForm) }}
             </div>
         {% endif %}
 
-        {{ form_start(registrationForm) }}
-            <div class="email-section mb-6">
-                {{ form_label(registrationForm.email) }}
-                <div class="input-container">
-                    {{ form_widget(registrationForm.email, 
-                        {'attr': 
-                            {   'class': 'form-control  w-full py-3 bg-white text-blue-900 hover:bg-blue-50 font-bold rounded-xl shadow-lg transition-all active:scale-95 mt-2 p-4', 
-                                'placeholder': 'email@example.com'}
-                        }) }}
+        {{ form_start(registrationForm, {'attr': {'class': 'auth-form'}}) }}
+
+            <div class="auth-form-grid">
+
+                {# Email #}
+                <div class="auth-field auth-full-width">
+                    {{ form_label(registrationForm.email, 'Email Address') }}
+
+                    {{ form_widget(registrationForm.email, {
+                        attr: {
+                            class: 'auth-input',
+                            placeholder: 'name@example.com',
+                            autocomplete: 'email'
+                        }
+                    }) }}
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
                 </div>
-                {{ form_errors(registrationForm.email) }}
-            </div>
 
-            <div class="name-section mb-6">
-                {{ form_label(registrationForm.name) }}
-                {{ form_widget(registrationForm.name, {
-                    attr: {
-                        class: 'w-full py-3 bg-white text-blue-900 hover:bg-blue-50 font-bold rounded-xl shadow-lg transition-all mt-2 p-4',
-                        placeholder: 'Enter your first name'
-                    }
-                }) }}
-                {{ form_errors(registrationForm.name) }}
-            </div>
+                {# First Name #}
+                <div class="auth-field">
+                    {{ form_label(registrationForm.name, 'First Name') }}
 
-            <div class="surname-section mb-6">
-                {{ form_label(registrationForm.surname) }}
-                {{ form_widget(registrationForm.surname, {
-                    attr: {
-                        class: 'w-full py-3 bg-white text-blue-900 hover:bg-blue-50 font-bold rounded-xl shadow-lg transition-all mt-2 p-4',
-                        placeholder: 'Enter your surname'
-                    }
-                }) }}
-                {{ form_errors(registrationForm.surname) }}
-            </div>
+                    {{ form_widget(registrationForm.name, {
+                        attr: {
+                            class: 'auth-input',
+                            placeholder: 'Enter your first name',
+                            autocomplete: 'given-name'
+                        }
+                    }) }}
 
-            <div class="phone-section mb-6">
-                {{ form_label(registrationForm.phone) }}
-                {{ form_widget(registrationForm.phone, {
-                    attr: {
-                        class: 'w-full py-3 bg-white text-blue-900 hover:bg-blue-50 font-bold rounded-xl shadow-lg transition-all mt-2 p-4',
-                        placeholder: 'e.g. 0712345678'
-                    }
-                }) }}
-                {{ form_errors(registrationForm.phone) }}
-            </div>
-            
-            <div class="password-section mb-6">
-                {{ form_label(registrationForm.plainPassword.first, 'Password') }}
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.name) }}
+                    </div>
+                </div>
 
-                <div class="input-container">
+                {# Surname #}
+                <div class="auth-field">
+                    {{ form_label(registrationForm.surname, 'Surname') }}
+
+                    {{ form_widget(registrationForm.surname, {
+                        attr: {
+                            class: 'auth-input',
+                            placeholder: 'Enter your surname',
+                            autocomplete: 'family-name'
+                        }
+                    }) }}
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.surname) }}
+                    </div>
+                </div>
+
+                {# Phone Number #}
+                <div class="auth-field auth-full-width">
+                    {{ form_label(registrationForm.phone, 'Phone Number') }}
+
+                    {{ form_widget(registrationForm.phone, {
+                        attr: {
+                            class: 'auth-input',
+                            placeholder: 'e.g. 0712345678',
+                            autocomplete: 'tel'
+                        }
+                    }) }}
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.phone) }}
+                    </div>
+                </div>
+
+                {# Password #}
+                <div class="auth-field">
+                    {{ form_label(registrationForm.plainPassword.first, 'Password') }}
+
                     {{ form_widget(registrationForm.plainPassword.first, {
                         attr: {
-                            class: 'w-full py-3 bg-white text-blue-900 hover:bg-blue-50 font-bold rounded-xl shadow-lg transition-all active:scale-95 mt-2 p-4'
+                            class: 'auth-input',
+                            placeholder: 'Create a password',
+                            autocomplete: 'new-password'
                         }
                     }) }}
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.plainPassword.first) }}
+                    </div>
                 </div>
 
-                {{ form_errors(registrationForm.plainPassword.first) }}
-            </div>
+                {# Confirm Password #}
+                <div class="auth-field">
+                    {{ form_label(registrationForm.plainPassword.second, 'Confirm Password') }}
 
-            <div class="password-section mb-6">
-                {{ form_label(registrationForm.plainPassword.second, 'Confirm Password') }}
-
-                <div class="input-container">
                     {{ form_widget(registrationForm.plainPassword.second, {
                         attr: {
-                            class: 'w-full py-3 bg-white text-blue-900 hover:bg-blue-50 font-bold rounded-xl shadow-lg transition-all active:scale-95 mt-2 p-4'
+                            class: 'auth-input',
+                            placeholder: 'Confirm your password',
+                            autocomplete: 'new-password'
                         }
                     }) }}
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.plainPassword.second) }}
+                        {{ form_errors(registrationForm.plainPassword) }}
+                    </div>
                 </div>
 
-                {{ form_errors(registrationForm.plainPassword.second) }}
-                {{ form_errors(registrationForm.plainPassword) }}
-            </div>
+                {# Terms and Conditions #}
+                <div class="auth-full-width">
+                    <div class="auth-terms">
+                        {{ form_widget(registrationForm.agreeTerms, {
+                            attr: {
+                                class: 'auth-checkbox'
+                            }
+                        }) }}
 
-            <div class="terms-section">
-                <div class="term-checkbox">
-                    {{ form_widget(registrationForm.agreeTerms, {
-                        attr: {style: 'margin-top: 5px;'}
-                    }) }}
+                        <label for="{{ registrationForm.agreeTerms.vars.id }}">
+                            I agree to the
+                            <a href="{{ path('app_loan_terms') }}">terms and conditions</a>.
+                        </label>
+                    </div>
 
-                    <label for="{{ registrationForm.agreeTerms.vars.id }}"
-                        style="margin-left: 10px;">
-                        Click to agree to the
-                        <a href="{{ path('app_loan_terms') }}"
-                        class="text-sm text-blue-200 hover:text-white transition">
-                            terms and conditions.
-                        </a>
-                    </label>
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.agreeTerms) }}
+                    </div>
                 </div>
 
-                {{ form_errors(registrationForm.agreeTerms) }}
-            </div>
+                {# Register Button #}
+                <div class="auth-full-width">
+                    <button type="submit" class="auth-button">
+                        Create Account
+                    </button>
+                </div>
 
-            <button type="submit" 
-            class="w-full py-3 bg-white text-blue-900 hover:bg-blue-50 font-bold rounded-xl shadow-lg transition-all active:scale-95 mt-4">
-            Register</button>
+            </div>
 
         {{ form_rest(registrationForm) }}
         {{ form_end(registrationForm) }}
 
-        <div class="mt-8 text-center border-t border-white/10 pt-6">
-            <p class="text-blue-200">Already have an account? <a href="{{ path('app_login') }}" class="text-sm text-blue-200 hover:text-white transition">Click here to login.</a></p>
+        <div class="auth-footer">
+            Already have an account?
+            <a href="{{ path('app_login') }}">Sign in here</a>
         </div>
+
     </div>
-    
+
 </div>
-    
+
 {% endblock %}

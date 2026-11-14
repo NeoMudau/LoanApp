@@ -66,12 +66,19 @@ class Customer
     #[ORM\OneToMany(targetEntity: MonthlyExpense::class, mappedBy: 'customer')]
     private Collection $monthlyExpenses;
 
+    /**
+     * @var Collection<int, LoanApplication>
+     */
+    #[ORM\OneToMany(targetEntity: LoanApplication::class, mappedBy: 'customer')]
+    private Collection $loanApplications;
+
     public function __construct()
     {
         $this->loans = new ArrayCollection();
         $this->historyCustomers = new ArrayCollection();
         $this->created_at = new \DateTimeImmutable();
         $this->monthlyExpenses = new ArrayCollection();
+        $this->loanApplications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -247,6 +254,31 @@ class Customer
     public function removeMonthlyExpense(MonthlyExpense $monthlyExpense): static
     {
         $this->monthlyExpenses->removeElement($monthlyExpense);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LoanApplication>
+     */
+    public function getLoanApplications(): Collection
+    {
+        return $this->loanApplications;
+    }
+
+    public function addLoanApplication(LoanApplication $loanApplication): static
+    {
+        if (!$this->loanApplications->contains($loanApplication)) {
+            $this->loanApplications->add($loanApplication);
+            $loanApplication->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoanApplication(LoanApplication $loanApplication): static
+    {
+        $this->loanApplications->removeElement($loanApplication);
 
         return $this;
     }
