@@ -397,7 +397,7 @@ class LoanRepository extends ServiceEntityRepository
     public function getTotalInterestCollected(): float
     {
         return (float) $this->createQueryBuilder('l')
-            ->select('SUM(l.interest_paid_this_month)') // adjust if you track differently
+            ->select('SUM(l.interest_paid_this_month)') 
             ->getQuery()
             ->getSingleScalarResult();
     }

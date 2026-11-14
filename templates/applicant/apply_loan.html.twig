@@ -1,1 +1,437 @@
-<h1>Apply for loan page</h1>
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Apply for a Loan - QuickLoan{% endblock %}
+
+{% block body %}
+
+<style>
+    .loan-application-page {
+        min-height: 100vh;
+        background: #071426;
+        color: #f1f5f9;
+        padding: 60px 20px 80px;
+        font-family: Arial, sans-serif;
+    }
+
+    .application-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .application-header {
+        text-align: center;
+        margin-bottom: 45px;
+    }
+
+    .application-header .eyebrow {
+        color: #60a5fa;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .application-header h1 {
+        color: #ffffff;
+        font-size: 38px;
+        margin: 15px 0;
+    }
+
+    .application-header p {
+        color: #a8b8cc;
+        font-size: 16px;
+        line-height: 1.7;
+        max-width: 650px;
+        margin: 0 auto;
+    }
+
+    .application-card {
+        background: #10243d;
+        border: 1px solid #203b5c;
+        border-radius: 16px;
+        padding: 35px;
+        margin-bottom: 25px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #29435f;
+    }
+
+    .section-number {
+        background: #1d4ed8;
+        color: white;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    .section-heading h2 {
+        color: white;
+        font-size: 20px;
+        margin: 0;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        color: #dbeafe;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        box-sizing: border-box;
+        background: #091a2e;
+        border: 1px solid #36516f;
+        border-radius: 8px;
+        padding: 13px 14px;
+        color: #ffffff;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #60a5fa;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: #71849b;
+    }
+
+    .form-group select option {
+        background: #10243d;
+        color: white;
+    }
+
+    .form-group textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .field-note {
+        color: #8da2bb;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .information-box {
+        background: rgba(29, 78, 216, 0.12);
+        border: 1px solid #254d88;
+        border-radius: 10px;
+        padding: 18px;
+        margin-bottom: 25px;
+        color: #cbdcf2;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .information-box strong {
+        color: #93c5fd;
+    }
+
+    .terms-checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-top: 20px;
+        color: #cbd5e1;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .terms-checkbox input {
+        margin-top: 5px;
+        accent-color: #2563eb;
+    }
+
+    .terms-checkbox a {
+        color: #60a5fa;
+        text-decoration: none;
+    }
+
+    .terms-checkbox a:hover {
+        text-decoration: underline;
+    }
+
+    .submit-section {
+        text-align: center;
+        margin-top: 35px;
+    }
+
+    .submit-button {
+        display: inline-block;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 9px;
+        padding: 15px 45px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+    }
+
+    .submit-button:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+    }
+
+    .submit-note {
+        color: #8297b0;
+        font-size: 12px;
+        margin-top: 15px;
+    }
+
+    .application-footer {
+        text-align: center;
+        color: #71849b;
+        font-size: 13px;
+        margin-top: 35px;
+    }
+
+    @media (max-width: 650px) {
+        .application-card {
+            padding: 23px 18px;
+        }
+
+        .application-header h1 {
+            font-size: 29px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full-width {
+            grid-column: auto;
+        }
+    }
+</style>
+
+<div class="loan-application-page">
+    <div class="application-container">
+
+        <div class="application-header">
+            <span class="eyebrow">QuickLoan</span>
+            <h1>Apply for a Loan</h1>
+            <p>
+                Take the next step towards your financial goals.
+                Complete the application below so we can assess your
+                information and determine whether you qualify.
+            </p>
+        </div>
+
+        <div class="information-box">
+            <strong>Before you apply:</strong>
+            Please provide accurate information. All applications are
+            subject to affordability and risk assessments. Submitting
+            an application does not guarantee loan approval.
+        </div>
+
+        {# Placeholder form: Symfony FormType will be connected later #}
+        <form method="post" action="#">
+
+            <!-- SECTION 1: PERSONAL INFORMATION -->
+            <div class="application-card">
+                <div class="section-heading">
+                    <span class="section-number">1</span>
+                    <h2>Personal Information</h2>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" placeholder="Enter your first name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" placeholder="Enter your surname">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="idNumber">South African ID Number</label>
+                        <input type="text" id="idNumber" placeholder="Enter your ID number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Contact Number</label>
+                        <input type="tel" id="phone" placeholder="e.g. 071 234 5678">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter your email address">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: EMPLOYMENT INFORMATION -->
+            <div class="application-card">
+                <div class="section-heading">
+                    <span class="section-number">2</span>
+                    <h2>Employment Information</h2>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="employmentStatus">Employment Status</label>
+                        <select id="employmentStatus">
+                            <option value="">Select employment status</option>
+                            <option>Employed</option>
+                            <option>Self-employed</option>
+                            <option>Unemployed</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employer">Employer / Business Name</label>
+                        <input type="text" id="employer" placeholder="Enter employer name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="monthlyIncome">Monthly Income (R)</label>
+                        <input type="number" id="monthlyIncome" placeholder="e.g. 15000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="monthlyExpenses">Monthly Expenses (R)</label>
+                        <input type="number" id="monthlyExpenses" placeholder="e.g. 8000">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: LOAN DETAILS -->
+            <div class="application-card">
+                <div class="section-heading">
+                    <span class="section-number">3</span>
+                    <h2>Loan Details</h2>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="loanAmount">Requested Loan Amount (R)</label>
+                        <input type="number" id="loanAmount" placeholder="Enter desired amount">
+                        <span class="field-note">
+                            The final amount offered will depend on your assessment.
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loanDuration">Preferred Repayment Period</label>
+                        <select id="loanDuration">
+                            <option value="">Select repayment period</option>
+                            <option>1 Month</option>
+                            <option>2 Months</option>
+                            <option>3 Months</option>
+                            <option>6 Months</option>
+                            <option>12 Months</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="loanPurpose">Purpose of Loan</label>
+                        <select id="loanPurpose">
+                            <option value="">Select loan purpose</option>
+                            <option>Personal Expenses</option>
+                            <option>Education</option>
+                            <option>Medical Expenses</option>
+                            <option>Business</option>
+                            <option>Debt Consolidation</option>
+                            <option>Emergency</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="loanReason">Additional Information</label>
+                        <textarea id="loanReason" placeholder="Tell us more about your loan request (optional)"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: DECLARATION -->
+            <div class="application-card">
+                <div class="section-heading">
+                    <span class="section-number">4</span>
+                    <h2>Declaration and Consent</h2>
+                </div>
+
+                <div class="information-box">
+                    By submitting an application, you confirm that the
+                    information provided is accurate and understand that
+                    QuickLoan may assess your affordability and credit risk
+                    before making a lending decision.
+                </div>
+
+                <label class="terms-checkbox">
+                    <input type="checkbox" id="confirmInformation">
+                    <span>
+                        I confirm that the information provided in this
+                        application is accurate and complete.
+                    </span>
+                </label>
+
+                <label class="terms-checkbox">
+                    <input type="checkbox" id="agreeTerms">
+                    <span>
+                        I have read and agree to the
+                        <a href="{{ path('app_loan_terms') }}">Terms and Conditions</a>.
+                    </span>
+                </label>
+            </div>
+
+            <div class="submit-section">
+                <button type="button" class="submit-button">
+                    Submit Loan Application
+                </button>
+
+                <p class="submit-note">
+                    This is a frontend placeholder. Application submission
+                    will be enabled once the backend is implemented.
+                </p>
+            </div>
+
+        </form>
+
+        <div class="application-footer">
+            © {{ "now"|date("Y") }} QuickLoan. All rights reserved.
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
