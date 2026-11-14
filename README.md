@@ -56,7 +56,7 @@ A loan management system built with **Symfony** and **PostgreSQL**. Administrato
 - **Affordability Assessment:** Calculate monthly income, total monthly expenses and disposable income. Display 30%, 40% and 50% affordability scenarios for the administrator to assess.
 - **Application Status:** Administrators can move an application from `SUBMITTED` to `UNDER_REVIEW`.
 - **Admin Dashboard (EasyAdmin 4):** Management screens for customers, loans, payments, customer history, archived customers, users and loan applications.
-- **Accounts:** Registration with email verification, login and logout using a custom authenticator.
+- **Accounts:** User registration, email verification functionality, and login/logout using a custom Symfony authenticator.
 - **Roles:** A role hierarchy supporting users, admins and super admins.
 - **Demo Data:** Fixtures for creating development demo accounts.
 - **Reports:** A reports page using Chart.js. Some displayed data is still for demonstration purposes.
