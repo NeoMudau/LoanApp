@@ -36,12 +36,4 @@ final class ApplicantController extends AbstractController
             'overdueLoans'=> $loanRepository->countOverdueLoans(),
         ]);
     }
-
-    #[Route('/applicant/apply/loans', name: 'app_loan_apply')]
-    public function ApplyLoan(): Response
-    {
-        return $this->render('applicant/apply_loan.html.twig', [
-            'controller_name' => 'ApplicantController',
-        ]);
-    }
 }
