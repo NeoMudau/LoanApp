@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Customer;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
@@ -36,7 +37,17 @@ class RegistrationController extends AbstractController
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
+            $customer = new Customer();
+
+            $customer->setUser($user);
+            $customer->setName($form->get('name')->getData());
+            $customer->setSurname($form->get('surname')->getData());
+            $customer->setPhone($form->get('phone')->getData());
+            $customer->setCreatedAt(new \DateTimeImmutable());
+
             $entityManager->persist($user);
+            $entityManager->persist($customer);
+
             $entityManager->flush();
 
             // generate a signed url and email it to the user
@@ -49,6 +60,7 @@ class RegistrationController extends AbstractController
             );
 
             // do anything else you need here, like send an email
+            
 
             return $this->redirectToRoute('app_home'); // where users gets redirected to after registering
         }
