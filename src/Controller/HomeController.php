@@ -33,4 +33,10 @@ final class HomeController extends AbstractController
     {
         return $this->render('home/careersNotify.html.twig');
     }
+
+    #[Route('/quick-loan/terms', name: 'app_loan_terms')]
+    public function loanTerms(): Response
+    {
+        return $this->render('home/loanTerms.html.twig');
+    }
 }
