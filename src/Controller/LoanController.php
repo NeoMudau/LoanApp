@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Customer;
-use App\Entity\Loan;
+use App\Entity\LoanApplication;
 use App\Form\LoanApplicationType;
 use App\Service\ProfileCompletionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,6 +20,7 @@ final class LoanController extends AbstractController
         EntityManagerInterface $entityManager,
         ProfileCompletionService $profileCompletionService
     ): Response {
+
         // Get the logged-in user
         $user = $this->getUser();
 
@@ -51,32 +52,30 @@ final class LoanController extends AbstractController
             return $this->redirectToRoute('app_profile');
         }
 
-        // Create the loan application form
-        $loan = new Loan();
+        // Create a new loan application
+        $application = new LoanApplication();
 
-        $form = $this->createForm(LoanApplicationType::class, $loan);
+        $form = $this->createForm(LoanApplicationType::class, $application);
 
         $form->handleRequest($request);
 
         // Process submitted application
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $now = new \DateTimeImmutable();
+            // Associate application with customer
+            $customer->addLoanApplication($application);
 
-            // Associate loan with logged-in customer
-            $loan->setCustomerId($customer);
+            // Set initial status
+            $application->setStatus('SUBMITTED');
 
-            // Set initial loan details
-            $loan->setCreatedAt($now);
-            $loan->setUpdatedAt($now);
-            $loan->setExtension(false);
-            $loan->setStatus('PENDING');
-
-            // Persist application
-            $entityManager->persist($loan);
+            // Save application
+            $entityManager->persist($application);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Your loan application has been submitted successfully.');
+            $this->addFlash(
+                'success',
+                'Your loan application has been submitted successfully.'
+            );
 
             return $this->redirectToRoute('app_loan_apply');
         }

@@ -17,6 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
+use App\Repository\LoanApplicationRepository;
+use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 #[AdminDashboard(routePath: '/admin/dashboard', routeName: 'admin')]
 class AdminDashboardController extends AbstractDashboardController
@@ -93,7 +97,114 @@ class AdminDashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Loan App');
+            ->setTitle('Quick Loan');
+    }
+
+    #[Route('/admin/loan-applications', name: 'admin_loan_applications')]
+    public function loanApplications(
+        LoanApplicationRepository $repository
+    ): Response {
+        $applications = $repository->findBy(
+            [],
+            ['createdAt' => 'DESC']
+        );
+
+        return $this->render('admin_dashboard/applications/index.html.twig', [
+            'applications' => $applications,
+        ]);
+    }
+
+    #[Route(
+        '/admin/loan-applications/{id}/review',
+        name: 'admin_loan_application_review',
+        requirements: ['id' => '\d+']
+    )]
+    public function reviewLoanApplication(
+        int $id,
+        LoanApplicationRepository $repository
+    ): Response {
+        $application = $repository->find($id);
+
+        if (!$application) {
+            throw $this->createNotFoundException(
+                'Loan application not found.'
+            );
+        }
+
+        $customer = $application->getCustomer();
+        $employment = $customer->getEmploymentDetails();
+
+        $monthlyIncome = $employment?->getSalary() ?? 0;
+
+        $expenses = $customer->getMonthlyExpenses();
+
+        $totalExpenses = 0;
+
+        foreach ($expenses as $expense) {
+            $totalExpenses += $expense->getAmount();
+        }
+
+        $disposableIncome = $monthlyIncome - $totalExpenses;
+
+        return $this->render('admin_dashboard/applications/review.html.twig', [
+            'application' => $application,
+            'employment' => $employment,
+            'monthlyIncome' => $monthlyIncome,
+            'expenses' => $expenses,
+            'totalExpenses' => $totalExpenses,
+            'disposableIncome' => $disposableIncome,
+            'scenario30' => $disposableIncome * 0.30,
+            'scenario40' => $disposableIncome * 0.40,
+            'scenario50' => $disposableIncome * 0.50,
+        ]);
+    }
+
+    #[Route(
+        '/admin/loan-applications/{id}/start-review',
+        name: 'admin_loan_application_start_review',
+        requirements: ['id' => '\d+'],
+        methods: ['POST']
+    )]
+    public function startReview(
+        Request $request,
+        int $id,
+        LoanApplicationRepository $repository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $application = $repository->find($id);
+
+        if (!$application) {
+            throw $this->createNotFoundException(
+                'Loan application not found.'
+            );
+        }
+
+        if (!$this->isCsrfTokenValid(
+            'start_review_' . $id,
+            $request->request->get('_token')
+        )) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
+        if ($application->getStatus() !== 'SUBMITTED') {
+            $this->addFlash('warning', 'This application cannot be moved to review.');
+
+            return $this->redirectToRoute(
+                'admin_loan_application_review',
+                ['id' => $id]
+            );
+        }
+
+        $application->setStatus('UNDER_REVIEW');
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Application successfully moved to Under Review.');
+
+        return $this->redirectToRoute(
+            'admin_loan_application_review',
+            ['id' => $id]
+        );
     }
 
     public function configureMenuItems(): iterable
@@ -101,6 +212,7 @@ class AdminDashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Customers', 'fa fa-user', Customer::class);
         yield MenuItem::linkToCrud('Loans', 'fa fa-money-bill', Loan::class);
+        yield MenuItem::linkToRoute('Loan Applications', 'fa fa-file-invoice-dollar', 'admin_loan_applications');
         yield MenuItem::linkToCrud('Payments', 'fa fa-credit-card', Payments::class);
 
         yield MenuItem::linkToCrud('History Customers', 'fa fa-history', HistoryCustomers::class)

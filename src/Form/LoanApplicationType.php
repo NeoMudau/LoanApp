@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Loan;
+use App\Entity\LoanApplication;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -16,7 +16,7 @@ class LoanApplicationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('amount', MoneyType::class, [
+            ->add('requestedAmount', MoneyType::class, [
                 'label' => 'Requested Loan Amount (R)',
                 'currency' => 'ZAR',
                 'scale' => 2,
@@ -26,7 +26,7 @@ class LoanApplicationType extends AbstractType
                 ],
             ])
 
-            ->add('loan_term_months', ChoiceType::class, [
+            ->add('requestedTermMonths', ChoiceType::class, [
                 'label' => 'Preferred Repayment Period',
                 'choices' => [
                     '1 Month' => 1,
@@ -45,7 +45,7 @@ class LoanApplicationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Loan::class,
+            'data_class' => LoanApplication::class,
         ]);
     }
 }
