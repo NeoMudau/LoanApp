@@ -26,8 +26,8 @@ class Address
     #[ORM\Column(length: 50)]
     private ?string $city = null;
 
-    #[ORM\Column]
-    private ?int $postalCode = null;
+    #[ORM\Column(length: 10)]
+    private ?string $postalCode = null;
 
     #[ORM\Column(length: 50)]
     private ?string $country = null;
@@ -88,12 +88,12 @@ class Address
         return $this;
     }
 
-    public function getPostalCode(): ?int
+    public function getPostalCode(): ?string
     {
         return $this->postalCode;
     }
 
-    public function setPostalCode(int $postalCode): static
+    public function setPostalCode(string $postalCode): static
     {
         $this->postalCode = $postalCode;
 

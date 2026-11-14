@@ -22,7 +22,7 @@ class EmploymentDetails
     #[ORM\Column(length: 255)]
     private ?string $position = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'employmentDetails', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
 

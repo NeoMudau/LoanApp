@@ -57,11 +57,21 @@ class Customer
     #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
     private ?Address $address = null;
 
+    #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
+    private ?EmploymentDetails $employmentDetails = null;
+
+    /**
+     * @var Collection<int, MonthlyExpense>
+     */
+    #[ORM\OneToMany(targetEntity: MonthlyExpense::class, mappedBy: 'customer')]
+    private Collection $monthlyExpenses;
+
     public function __construct()
     {
         $this->loans = new ArrayCollection();
         $this->historyCustomers = new ArrayCollection();
         $this->created_at = new \DateTimeImmutable();
+        $this->monthlyExpenses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,6 +206,47 @@ class Customer
         }
 
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getEmploymentDetails(): ?EmploymentDetails
+    {
+        return $this->employmentDetails;
+    }
+
+    public function setEmploymentDetails(EmploymentDetails $employmentDetails): static
+    {
+        if ($employmentDetails->getCustomer() !== $this) {
+            $employmentDetails->setCustomer($this);
+        }
+
+        $this->employmentDetails = $employmentDetails;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MonthlyExpense>
+     */
+    public function getMonthlyExpenses(): Collection
+    {
+        return $this->monthlyExpenses;
+    }
+
+    public function addMonthlyExpense(MonthlyExpense $monthlyExpense): static
+    {
+        if (!$this->monthlyExpenses->contains($monthlyExpense)) {
+            $this->monthlyExpenses->add($monthlyExpense);
+            $monthlyExpense->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMonthlyExpense(MonthlyExpense $monthlyExpense): static
+    {
+        $this->monthlyExpenses->removeElement($monthlyExpense);
 
         return $this;
     }
