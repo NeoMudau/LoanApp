@@ -111,7 +111,7 @@ class AdminDashboardController extends AbstractDashboardController
             ->setPermission('ROLE_SUPER_ADMIN');
         yield MenuItem::linkToRoute('Overdue Loans', 'fa fa-exclamation-triangle', 'overdue_loans');
         yield MenuItem::linkToRoute('Monthly Report', 'fa fa-chart-line', 'monthly_report');
-        yield MenuItem::linkToRoute('Settings', 'fa fa-cogs', 'loan_settings')
+        yield MenuItem::linkToRoute('Settings', 'fa fa-cogs', 'app_settings')
             ->setPermission('ROLE_SUPER_ADMIN');
     }
 
