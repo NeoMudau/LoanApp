@@ -1,0 +1,495 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Loan Terms & Conditions - QuickLoan{% endblock %}
+
+{% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<style>
+    :root {
+        --navy: #060d1f;
+        --surface: #111827;
+        --card: #161d2e;
+        --blue: #3b82f6;
+        --cyan: #38bdf8;
+        --white: #f0f6ff;
+        --muted: #8892a4;
+        --border: rgba(255,255,255,0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        background: var(--navy);
+        color: var(--white);
+        font-family: 'Sora', sans-serif;
+        padding-top: 80px;
+    }
+
+    .terms-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 5%;
+        background: rgba(6,13,31,.95);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+        font-size: 23px;
+        font-weight: 700;
+        color: var(--white);
+        text-decoration: none;
+    }
+
+    .logo span { color: var(--cyan); }
+
+    .back-link {
+        color: #93c5fd;
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+    .terms-container {
+        max-width: 950px;
+        margin: 45px auto;
+        padding: 0 20px 60px;
+    }
+
+    .terms-header {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 35px;
+        margin-bottom: 25px;
+    }
+
+    .eyebrow {
+        color: var(--cyan);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    h1 {
+        font-size: clamp(28px, 5vw, 38px);
+        margin: 15px 0 10px;
+    }
+
+    h1 span { color: var(--cyan); }
+
+    .subtitle {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.8;
+    }
+
+    .notice {
+        background: rgba(59,130,246,.09);
+        border: 1px solid rgba(59,130,246,.25);
+        border-radius: 12px;
+        padding: 18px;
+        margin-top: 22px;
+        color: #bfdbfe;
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .terms-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 16px;
+    }
+
+    .terms-card h2 {
+        font-size: 17px;
+        margin-bottom: 13px;
+        color: #93c5fd;
+    }
+
+    .terms-card p,
+    .terms-card li {
+        font-size: 13px;
+        color: #b8c4d8;
+        line-height: 1.9;
+    }
+
+    .terms-card ul {
+        padding-left: 22px;
+        margin-top: 10px;
+    }
+
+    .terms-card li { margin-bottom: 7px; }
+
+    .rate-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin: 20px 0;
+    }
+
+    .rate-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+        text-align: center;
+    }
+
+    .rate-card strong {
+        display: block;
+        color: var(--cyan);
+        font-size: 27px;
+        margin-bottom: 8px;
+    }
+
+    .rate-card span {
+        font-size: 11px;
+        color: var(--muted);
+    }
+
+    .terms-footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+        padding: 25px 0;
+        border-top: 1px solid var(--border);
+        margin-top: 30px;
+    }
+
+    @media(max-width: 600px) {
+        .terms-header { padding: 23px; }
+        .terms-card { padding: 20px; }
+        .rate-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<nav class="terms-nav">
+    <a href="{{ path('app_home') }}" class="logo">
+        Quick<span>Loan</span>
+    </a>
+
+    <a href="{{ path('app_home') }}" class="back-link">
+        ← Back to home
+    </a>
+</nav>
+
+<main class="terms-container">
+
+    <header class="terms-header">
+        <div class="eyebrow">Customer agreement</div>
+
+        <h1>Terms & <span>Conditions</span></h1>
+
+        <p class="subtitle">
+            Please read these terms carefully before registering for an
+            account or applying for a loan with QuickLoan.
+            These terms explain how applications are assessed, how
+            interest is determined, and what is expected from borrowers.
+        </p>
+
+        <div class="notice">
+            <strong>Important:</strong>
+            Registering an account does not guarantee loan approval.
+            Every loan application is subject to assessment, approval
+            and a separate credit agreement.
+        </div>
+    </header>
+
+    <section class="terms-card">
+        <h2>1. Registration and Account Information</h2>
+
+        <p>
+            By registering with QuickLoan, you agree to provide accurate,
+            complete and up-to-date personal information.
+            This includes your full name, contact details, employment
+            information and any other information reasonably required
+            to assess your loan application.
+        </p>
+
+        <ul>
+            <li>You must provide truthful information during registration and application.</li>
+            <li>You are responsible for keeping your login credentials secure.</li>
+            <li>You must notify QuickLoan if your personal or contact information changes.</li>
+            <li>You must not create an account using another person's identity.</li>
+        </ul>
+    </section>
+
+    <section class="terms-card">
+        <h2>2. Loan Applications and Approval</h2>
+
+        <p>
+            Submitting a loan application does not mean that a loan
+            has been approved. QuickLoan assesses each application
+            individually before making a lending decision.
+        </p>
+
+        <p>Our assessment may consider:</p>
+
+        <ul>
+            <li>Your income and employment status.</li>
+            <li>Your monthly expenses and existing financial obligations.</li>
+            <li>Your ability to repay the requested amount.</li>
+            <li>Your credit history and available credit information, where lawfully obtained.</li>
+            <li>The amount requested and the overall risk associated with the application.</li>
+        </ul>
+
+        <p>
+            QuickLoan may approve, decline or offer a different loan
+            amount based on the assessment. Approval is not guaranteed.
+        </p>
+    </section>
+
+    <section class="terms-card">
+        <h2>3. Interest Rates and Risk Assessment</h2>
+
+        <p>
+            QuickLoan uses a risk-based assessment process to determine
+            the applicable loan terms. Depending on the product,
+            assessment outcome and applicable legal limits, the
+            proposed interest rate may fall within one of the following
+            indicative pricing tiers:
+        </p>
+
+        <div class="rate-grid">
+            <div class="rate-card">
+                <strong>30%</strong>
+                <span>Indicative lower pricing tier</span>
+            </div>
+
+            <div class="rate-card">
+                <strong>40%</strong>
+                <span>Indicative middle pricing tier</span>
+            </div>
+
+            <div class="rate-card">
+                <strong>50%</strong>
+                <span>Indicative higher pricing tier</span>
+            </div>
+        </div>
+
+        <p>
+            These percentages are indicative business pricing tiers,
+            not a promise that these rates can be charged on every loan.
+            The actual interest rate must comply with applicable
+            South African credit legislation and the rules for the
+            specific type of credit agreement.
+        </p>
+
+        <p>
+            Before accepting a loan, you will be provided with a
+            quotation or pre-agreement statement showing the applicable
+            interest rate, fees, repayment schedule and total amount
+            payable.
+        </p>
+
+        <p>
+            You should only accept the loan if you understand and agree
+            to the disclosed costs and repayment obligations.
+        </p>
+    </section>
+
+    <section class="terms-card">
+        <h2>4. Loan Amount and Repayment</h2>
+
+        <p>
+            The approved loan amount may differ from the amount
+            originally requested. The final amount depends on the
+            affordability and risk assessment.
+        </p>
+
+        <p>Your individual loan agreement will specify:</p>
+
+        <ul>
+            <li>The approved principal loan amount.</li>
+            <li>The applicable interest rate and other permitted charges.</li>
+            <li>The total amount repayable.</li>
+            <li>The repayment dates and instalment amounts.</li>
+            <li>The loan commencement date and expected settlement date.</li>
+        </ul>
+
+        <p>
+            You are responsible for making payments in accordance
+            with the repayment schedule in your loan agreement.
+        </p>
+    </section>
+
+    <section class="terms-card">
+        <h2>5. Missed or Late Payments</h2>
+
+        <p>
+            You must make repayments by their agreed due dates.
+            If you anticipate difficulty making a payment, contact
+            QuickLoan as soon as possible.
+        </p>
+
+        <p>
+            If a payment is missed or overdue, QuickLoan may take
+            the steps permitted by your credit agreement and applicable
+            law. These may include:
+        </p>
+
+        <ul>
+            <li>Contacting you regarding the overdue payment.</li>
+            <li>Requesting payment of the overdue amount.</li>
+            <li>Applying interest on overdue amounts where legally permitted and contractually agreed.</li>
+            <li>Applying permitted default administration charges or collection costs where applicable.</li>
+            <li>Taking lawful steps to recover outstanding amounts.</li>
+        </ul>
+
+        <p>
+            No additional interest, penalty or charge will be imposed
+            merely because a payment is missed unless it is permitted
+            by law and properly provided for in the applicable credit
+            agreement. Charges will not be added arbitrarily.
+        </p>
+    </section>
+
+    <section class="terms-card">
+        <h2>6. Loan Extensions and Renewals</h2>
+
+        <p>
+            A borrower who cannot settle a loan by its original due date
+            may request an extension, subject to approval and the
+            applicable credit agreement.
+        </p>
+
+        <p>
+            QuickLoan may consider an extension where the borrower
+            has paid the interest amount required for the proposed
+            extension. The required amount and any other applicable
+            conditions will be communicated before the extension is
+            accepted.
+        </p>
+
+        <ul>
+            <li>An extension is not automatic or guaranteed.</li>
+            <li>Payment of interest alone does not automatically settle the principal debt.</li>
+            <li>The outstanding principal may remain payable after an extension.</li>
+            <li>The revised repayment date and total cost must be disclosed.</li>
+            <li>Any extension or renewal must comply with applicable credit legislation.</li>
+        </ul>
+    </section>
+
+    <section class="terms-card">
+        <h2>7. Early Repayment</h2>
+
+        <p>
+            You may repay your outstanding loan before the scheduled
+            settlement date, subject to the applicable credit agreement
+            and legal requirements.
+        </p>
+
+        <p>
+            Contact QuickLoan to request an updated settlement amount
+            before making an early settlement payment.
+        </p>
+    </section>
+
+    <section class="terms-card">
+        <h2>8. Personal Information and Privacy</h2>
+
+        <p>
+            QuickLoan may collect and process personal information
+            necessary to register your account, assess applications,
+            administer loans, process payments and meet legal obligations.
+        </p>
+
+        <p>
+            Personal information must be handled in accordance with
+            applicable privacy and data protection laws, including
+            the Protection of Personal Information Act (POPIA).
+        </p>
+
+        <p>
+            Your information will only be shared where necessary and
+            legally permitted, including with authorised service
+            providers and relevant credit bureaux where applicable.
+        </p>
+    </section>
+
+    <section class="terms-card">
+        <h2>9. Default and Debt Recovery</h2>
+
+        <p>
+            If you fail to meet your repayment obligations, QuickLoan
+            may pursue lawful debt recovery procedures after following
+            the applicable notice and enforcement requirements.
+        </p>
+
+        <p>
+            Any recovery costs or legal charges must be permitted by
+            applicable law and the relevant credit agreement.
+        </p>
+    </section>
+
+    <section class="terms-card">
+        <h2>10. Changes to These Terms</h2>
+
+        <p>
+            QuickLoan may update these general terms when necessary.
+            Material changes will be communicated through appropriate
+            channels.
+        </p>
+
+        <p>
+            Changes to an existing loan's interest rate, fees or
+            repayment obligations will only be made where permitted
+            by the relevant credit agreement and applicable law.
+        </p>
+    </section>
+
+    <section class="terms-card">
+        <h2>11. Applicable Law and Consumer Rights</h2>
+
+        <p>
+            These terms are intended to operate in accordance with
+            the laws of the Republic of South Africa, including
+            the National Credit Act 34 of 2005, the National Credit
+            Regulations and applicable consumer protection and
+            privacy legislation.
+        </p>
+
+        <p>
+            Nothing in these terms removes or limits any consumer
+            right that cannot lawfully be excluded.
+        </p>
+
+        <p>
+            You are entitled to receive the relevant loan information
+            and documents before entering into a credit agreement.
+        </p>
+    </section>
+
+    <section class="terms-card">
+        <h2>12. Contact and Enquiries</h2>
+
+        <p>
+            If you have questions about your account, loan application,
+            repayment schedule or these terms, contact QuickLoan
+            through the official communication channels provided
+            on our website.
+        </p>
+    </section>
+
+    <div class="terms-footer">
+        © {{ "now"|date("Y") }} QuickLoan. All rights reserved.
+        <br><br>
+        Please read your individual loan agreement before accepting credit.
+    </div>
+
+</main>
+{% endblock %}

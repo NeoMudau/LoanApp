@@ -1,0 +1,342 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Apply for a Loan - QuickLoan{% endblock %}
+
+{% block body %}
+
+<style>
+    .loan-application-page {
+        min-height: 100vh;
+        background: #071426;
+        color: #f1f5f9;
+        padding: 60px 20px 80px;
+        font-family: Arial, sans-serif;
+    }
+
+    .application-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .application-header {
+        text-align: center;
+        margin-bottom: 45px;
+    }
+
+    .application-header .eyebrow {
+        color: #60a5fa;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .application-header h1 {
+        color: #ffffff;
+        font-size: 38px;
+        margin: 15px 0;
+    }
+
+    .application-header p {
+        color: #a8b8cc;
+        font-size: 16px;
+        line-height: 1.7;
+        max-width: 650px;
+        margin: 0 auto;
+    }
+
+    .application-card {
+        background: #10243d;
+        border: 1px solid #203b5c;
+        border-radius: 16px;
+        padding: 35px;
+        margin-bottom: 25px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #29435f;
+    }
+
+    .section-number {
+        background: #1d4ed8;
+        color: white;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    .section-heading h2 {
+        color: white;
+        font-size: 20px;
+        margin: 0;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        color: #dbeafe;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        box-sizing: border-box;
+        background: #091a2e;
+        border: 1px solid #36516f;
+        border-radius: 8px;
+        padding: 13px 14px;
+        color: #ffffff;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #60a5fa;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: #71849b;
+    }
+
+    .form-group select option {
+        background: #10243d;
+        color: white;
+    }
+
+    .form-group textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .field-note {
+        color: #8da2bb;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .information-box {
+        background: rgba(29, 78, 216, 0.12);
+        border: 1px solid #254d88;
+        border-radius: 10px;
+        padding: 18px;
+        margin-bottom: 25px;
+        color: #cbdcf2;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .information-box strong {
+        color: #93c5fd;
+    }
+
+    .terms-checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-top: 20px;
+        color: #cbd5e1;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .terms-checkbox input {
+        margin-top: 5px;
+        accent-color: #2563eb;
+    }
+
+    .terms-checkbox a {
+        color: #60a5fa;
+        text-decoration: none;
+    }
+
+    .terms-checkbox a:hover {
+        text-decoration: underline;
+    }
+
+    .submit-section {
+        text-align: center;
+        margin-top: 35px;
+    }
+
+    .submit-button {
+        display: inline-block;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 9px;
+        padding: 15px 45px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+    }
+
+    .submit-button:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+    }
+
+    .submit-note {
+        color: #8297b0;
+        font-size: 12px;
+        margin-top: 15px;
+    }
+
+    .application-footer {
+        text-align: center;
+        color: #71849b;
+        font-size: 13px;
+        margin-top: 35px;
+    }
+
+    @media (max-width: 650px) {
+        .application-card {
+            padding: 23px 18px;
+        }
+
+        .application-header h1 {
+            font-size: 29px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full-width {
+            grid-column: auto;
+        }
+    }
+</style>
+
+<div class="loan-application-page">
+    <div class="application-container">
+
+        <div class="application-header">
+            <span class="eyebrow">QuickLoan</span>
+            <h1>Apply for a Loan</h1>
+            <p>
+                Take the next step towards your financial goals.
+                Complete the application below so we can assess your
+                information and determine whether you qualify.
+            </p>
+        </div>
+
+        <div class="information-box">
+            <strong>Before you apply:</strong>
+            Please provide accurate information. All applications are
+            subject to affordability and risk assessments. Submitting
+            an application does not guarantee loan approval.
+        </div>
+
+        {# Loan application form #}
+                
+        {{ form_start(loanForm, {'attr': {'class': 'loan-application-form'}}) }}
+
+            <!-- SECTION 1: LOAN DETAILS -->
+            <div class="application-card">
+                <div class="section-heading">
+                    <span class="section-number">1</span>
+                    <h2>Loan Details</h2>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        {{ form_label(loanForm.requestedAmount) }}
+                        {{ form_widget(loanForm.requestedAmount, {
+                            'attr': {
+                                'placeholder': 'Enter desired amount'
+                            }
+                        }) }}
+                        {{ form_errors(loanForm.requestedAmount) }}
+                        <span class="field-note">
+                            The final amount offered will depend on your affordability assessment.
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(loanForm.requestedTermMonths) }}
+                        {{ form_widget(loanForm.requestedTermMonths) }}
+                        {{ form_errors(loanForm.requestedTermMonths) }}
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- SECTION 2: DECLARATION -->
+            <div class="application-card">
+                <div class="section-heading">
+                    <span class="section-number">2</span>
+                    <h2>Declaration and Consent</h2>
+                </div>
+
+                <div class="information-box">
+                    By submitting this application, you confirm that your
+                    existing profile information is accurate and up to date.
+                </div>
+
+                <label class="terms-checkbox">
+                    <input type="checkbox" name="confirmInformation" value="1" required>
+                    <span>
+                        I confirm that my profile information and loan application
+                        details are accurate and complete.
+                    </span>
+                </label>
+
+                <label class="terms-checkbox">
+                    <input type="checkbox" name="agreeTerms" value="1" required>
+                    <span>
+                        I have read and agree to the
+                        <a href="{{ path('app_loan_terms') }}">Terms and Conditions</a>.
+                    </span>
+                </label>
+            </div>
+
+            <div class="submit-section">
+                <button type="submit" class="submit-button">
+                    Submit Loan Application
+                </button>
+            </div>
+
+        {{ form_end(loanForm) }}
+
+        <div class="application-footer">
+            © {{ "now"|date("Y") }} QuickLoan. All rights reserved.
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

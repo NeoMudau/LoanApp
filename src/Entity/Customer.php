@@ -25,10 +25,22 @@ class Customer
     private ?string $phone = null;
 
     #[ORM\Column]
-    private ?float $salary = null;
-
-    #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
 
     /**
      * @var Collection<int, Loan>
@@ -42,11 +54,31 @@ class Customer
     #[ORM\OneToMany(targetEntity: HistoryCustomers::class, mappedBy: 'customer_id')]
     private Collection $historyCustomers;
 
+    #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
+    private ?Address $address = null;
+
+    #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
+    private ?EmploymentDetails $employmentDetails = null;
+
+    /**
+     * @var Collection<int, MonthlyExpense>
+     */
+    #[ORM\OneToMany(targetEntity: MonthlyExpense::class, mappedBy: 'customer')]
+    private Collection $monthlyExpenses;
+
+    /**
+     * @var Collection<int, LoanApplication>
+     */
+    #[ORM\OneToMany(targetEntity: LoanApplication::class, mappedBy: 'customer')]
+    private Collection $loanApplications;
+
     public function __construct()
     {
         $this->loans = new ArrayCollection();
         $this->historyCustomers = new ArrayCollection();
         $this->created_at = new \DateTimeImmutable();
+        $this->monthlyExpenses = new ArrayCollection();
+        $this->loanApplications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -86,18 +118,6 @@ class Customer
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
-
-        return $this;
-    }
-
-    public function getSalary(): ?float
-    {
-        return $this->salary;
-    }
-
-    public function setSalary(float $salary): static
-    {
-        $this->salary = $salary;
 
         return $this;
     }
@@ -176,6 +196,89 @@ class Customer
                 $historyCustomer->setCustomerId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(Address $address): static
+    {
+        // set the owning side of the relation if necessary
+        if ($address->getCustomer() !== $this) {
+            $address->setCustomer($this);
+        }
+
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getEmploymentDetails(): ?EmploymentDetails
+    {
+        return $this->employmentDetails;
+    }
+
+    public function setEmploymentDetails(EmploymentDetails $employmentDetails): static
+    {
+        if ($employmentDetails->getCustomer() !== $this) {
+            $employmentDetails->setCustomer($this);
+        }
+
+        $this->employmentDetails = $employmentDetails;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MonthlyExpense>
+     */
+    public function getMonthlyExpenses(): Collection
+    {
+        return $this->monthlyExpenses;
+    }
+
+    public function addMonthlyExpense(MonthlyExpense $monthlyExpense): static
+    {
+        if (!$this->monthlyExpenses->contains($monthlyExpense)) {
+            $this->monthlyExpenses->add($monthlyExpense);
+            $monthlyExpense->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMonthlyExpense(MonthlyExpense $monthlyExpense): static
+    {
+        $this->monthlyExpenses->removeElement($monthlyExpense);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LoanApplication>
+     */
+    public function getLoanApplications(): Collection
+    {
+        return $this->loanApplications;
+    }
+
+    public function addLoanApplication(LoanApplication $loanApplication): static
+    {
+        if (!$this->loanApplications->contains($loanApplication)) {
+            $this->loanApplications->add($loanApplication);
+            $loanApplication->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoanApplication(LoanApplication $loanApplication): static
+    {
+        $this->loanApplications->removeElement($loanApplication);
 
         return $this;
     }

@@ -1,25 +1,89 @@
-{# templates/login/index.html.twig #}
+
 {% extends 'base.html.twig' %}
 
-{# ... #}
+{% block title %}Login | QuickLoan{% endblock %}
 
 {% block body %}
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
 
-    <form action="{{ path('app_login') }}" method="post">
-        <label for="username">Email:</label>
-        {# Change name="_username" to name="email" #}
-        <input type="text" id="username" name="email" value="{{ last_username }}" required>
+<div class="auth-page">
 
-        <label for="password">Password:</label>
-        {# Change name="_password" to name="password" #}
-        <input type="password" id="password" name="password" required>
+    <div class="auth-card login-card">
 
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        {# Heading #}
+        <div class="auth-header">
+            <h1>Welcome Back</h1>
+            <p>Sign in to access your QuickLoan account.</p>
+        </div>
 
-        <button type="submit">login</button>
-    </form>
+        {# Login Error #}
+        {% if error %}
+            <div class="auth-error" style="margin-bottom: 1.25rem;">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        {# Login Form #}
+        <form action="{{ path('app_login') }}" method="post" class="login-form">
+
+            {# Email #}
+            <div class="auth-field">
+                <label for="username">Email Address</label>
+
+                <input
+                    type="email"
+                    id="username"
+                    name="email"
+                    value="{{ last_username }}"
+                    class="auth-input"
+                    placeholder="name@example.com"
+                    autocomplete="email"
+                    required
+                    autofocus
+                >
+            </div>
+
+            {# Password #}
+            <div class="auth-field">
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="auth-input"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            {# CSRF Token #}
+            <input
+                type="hidden"
+                name="_csrf_token"
+                value="{{ csrf_token('authenticate') }}"
+            >
+
+            {# Forgot Password #}
+            <div class="login-options">
+                <a href="#">Forgot password?</a>
+            </div>
+
+            {# Submit Button #}
+            <button type="submit" class="auth-button">
+                Sign In
+            </button>
+
+        </form>
+
+        {# Register Link #}
+        <div class="auth-footer">
+            Don't have an account?
+            <a href="{{ path('app_register') }}">Create an account</a>
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}

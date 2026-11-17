@@ -1,23 +1,179 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register | QuickLoan{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
 
-    <h1>Register</h1>
+<div class="auth-page">
 
-    {{ form_errors(registrationForm) }}
+    <div class="auth-card">
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        <div class="auth-header">
+            <h1>Create Account</h1>
+            <p>Welcome to QuickLoan. Enter your details to get started.</p>
+        </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+        {# Email verification errors #}
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="auth-error" style="margin-bottom: 1rem;">
+                {{ flash_error }}
+            </div>
+        {% endfor %}
+
+        {# General form errors #}
+        {% if form_errors(registrationForm) %}
+            <div class="auth-error" style="margin-bottom: 1rem;">
+                {{ form_errors(registrationForm) }}
+            </div>
+        {% endif %}
+
+        {{ form_start(registrationForm, {'attr': {'class': 'auth-form'}}) }}
+
+            <div class="auth-form-grid">
+
+                {# Email #}
+                <div class="auth-field auth-full-width">
+                    {{ form_label(registrationForm.email, 'Email Address') }}
+
+                    {{ form_widget(registrationForm.email, {
+                        attr: {
+                            class: 'auth-input',
+                            placeholder: 'name@example.com',
+                            autocomplete: 'email'
+                        }
+                    }) }}
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+                </div>
+
+                {# First Name #}
+                <div class="auth-field">
+                    {{ form_label(registrationForm.name, 'First Name') }}
+
+                    {{ form_widget(registrationForm.name, {
+                        attr: {
+                            class: 'auth-input',
+                            placeholder: 'Enter your first name',
+                            autocomplete: 'given-name'
+                        }
+                    }) }}
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.name) }}
+                    </div>
+                </div>
+
+                {# Surname #}
+                <div class="auth-field">
+                    {{ form_label(registrationForm.surname, 'Surname') }}
+
+                    {{ form_widget(registrationForm.surname, {
+                        attr: {
+                            class: 'auth-input',
+                            placeholder: 'Enter your surname',
+                            autocomplete: 'family-name'
+                        }
+                    }) }}
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.surname) }}
+                    </div>
+                </div>
+
+                {# Phone Number #}
+                <div class="auth-field auth-full-width">
+                    {{ form_label(registrationForm.phone, 'Phone Number') }}
+
+                    {{ form_widget(registrationForm.phone, {
+                        attr: {
+                            class: 'auth-input',
+                            placeholder: 'e.g. 0712345678',
+                            autocomplete: 'tel'
+                        }
+                    }) }}
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.phone) }}
+                    </div>
+                </div>
+
+                {# Password #}
+                <div class="auth-field">
+                    {{ form_label(registrationForm.plainPassword.first, 'Password') }}
+
+                    {{ form_widget(registrationForm.plainPassword.first, {
+                        attr: {
+                            class: 'auth-input',
+                            placeholder: 'Create a password',
+                            autocomplete: 'new-password'
+                        }
+                    }) }}
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.plainPassword.first) }}
+                    </div>
+                </div>
+
+                {# Confirm Password #}
+                <div class="auth-field">
+                    {{ form_label(registrationForm.plainPassword.second, 'Confirm Password') }}
+
+                    {{ form_widget(registrationForm.plainPassword.second, {
+                        attr: {
+                            class: 'auth-input',
+                            placeholder: 'Confirm your password',
+                            autocomplete: 'new-password'
+                        }
+                    }) }}
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.plainPassword.second) }}
+                        {{ form_errors(registrationForm.plainPassword) }}
+                    </div>
+                </div>
+
+                {# Terms and Conditions #}
+                <div class="auth-full-width">
+                    <div class="auth-terms">
+                        {{ form_widget(registrationForm.agreeTerms, {
+                            attr: {
+                                class: 'auth-checkbox'
+                            }
+                        }) }}
+
+                        <label for="{{ registrationForm.agreeTerms.vars.id }}">
+                            I agree to the
+                            <a href="{{ path('app_loan_terms') }}">terms and conditions</a>.
+                        </label>
+                    </div>
+
+                    <div class="auth-field-error">
+                        {{ form_errors(registrationForm.agreeTerms) }}
+                    </div>
+                </div>
+
+                {# Register Button #}
+                <div class="auth-full-width">
+                    <button type="submit" class="auth-button">
+                        Create Account
+                    </button>
+                </div>
+
+            </div>
+
+        {{ form_rest(registrationForm) }}
+        {{ form_end(registrationForm) }}
+
+        <div class="auth-footer">
+            Already have an account?
+            <a href="{{ path('app_login') }}">Sign in here</a>
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}

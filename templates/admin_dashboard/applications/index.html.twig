@@ -1,0 +1,159 @@
+
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}
+    <i class="fa fa-file-invoice-dollar"></i> Loan Applications
+{% endblock %}
+
+{% block main %}
+
+<div class="container-fluid ql-applications">
+
+    <div class="ql-page-heading">
+        <h2>Loan Applications</h2>
+        <p>Review and manage customer loan applications.</p>
+    </div>
+
+    {# Summary cards #}
+    <div class="row mb-4">
+
+        <div class="col-md-3">
+            <div class="ql-stat-card">
+                <small class="text-muted">Total Applications</small>
+                <h3>{{ applications|length }}</h3>
+                <div class="ql-stat-accent"></div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="ql-stat-card">
+                <small class="text-muted">Submitted</small>
+                <h3>
+                    {{ applications|filter(a => a.status == 'SUBMITTED')|length }}
+                </h3>
+                <div class="ql-stat-accent"></div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="ql-stat-card">
+                <small class="text-muted">Under Review</small>
+                <h3>
+                    {{ applications|filter(a => a.status == 'UNDER_REVIEW')|length }}
+                </h3>
+                <div class="ql-stat-accent"></div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="ql-stat-card">
+                <small class="text-muted">Counter Offered</small>
+                <h3>
+                    {{ applications|filter(a => a.status == 'COUNTER_OFFERED')|length }}
+                </h3>
+                <div class="ql-stat-accent"></div>
+            </div>
+        </div>
+
+    </div>
+
+    {# Applications table #}
+    <div class="ql-table-card">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">All Applications</h5>
+            <span class="badge bg-primary">
+                {{ applications|length }} Records
+            </span>
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Requested Amount</th>
+                        <th>Term</th>
+                        <th>Date Submitted</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for application in applications %}
+
+                    <tr>
+
+                        <td>
+                            <strong class="ql-customer-name">
+                                {{ application.customer.name }}
+                                {{ application.customer.surname }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            <span class="ql-amount">
+                                R {{ application.requestedAmount|number_format(2, '.', ',') }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {{ application.requestedTermMonths }} Months
+                        </td>
+
+                        <td>
+                            {{ application.createdAt|date('d M Y, H:i') }}
+                        </td>
+
+                        <td>
+                            {% set statusColors = {
+                                'SUBMITTED': 'primary',
+                                'UNDER_REVIEW': 'info',
+                                'MORE_INFO_REQUIRED': 'warning',
+                                'COUNTER_OFFERED': 'warning',
+                                'CUSTOMER_ACCEPTED': 'success',
+                                'CUSTOMER_REJECTED': 'secondary',
+                                'APPROVED': 'success',
+                                'DECLINED': 'danger',
+                                'EXPIRED': 'secondary'
+                            } %}
+
+                            <span class="badge bg-{{ statusColors[application.status] ?? 'secondary' }}">
+                                {{ application.status|replace({'_': ' '}) }}
+                            </span>
+                        </td>
+
+                        <td>
+                                <a href="{{ path('admin_loan_application_review', {
+                                    id: application.id
+                                }) }}" class="ql-review-btn">
+                                <i class="fa fa-eye"></i> Review
+                            </a>
+                        </td>
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="fa fa-folder-open fa-2x mb-2"></i>
+                            <p class="mb-0">No loan applications found.</p>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

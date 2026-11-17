@@ -15,4 +15,28 @@ final class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+    #[Route('/contact', name: 'app_contact')]
+    public function contact(): Response
+    {
+        return $this->render('home/contact.html.twig');
+    }
+
+    #[Route('/quick-loan/careers', name: 'app_careers')]
+    public function careers(): Response
+    {
+        return $this->render('home/careers.html.twig');
+    }
+
+    #[Route('/quick-loan/careers/notify', name: 'app_careers_notify')]
+    public function careersNotify(): Response
+    {
+        return $this->render('home/careersNotify.html.twig');
+    }
+
+    #[Route('/quick-loan/terms', name: 'app_loan_terms')]
+    public function loanTerms(): Response
+    {
+        return $this->render('home/loanTerms.html.twig');
+    }
 }

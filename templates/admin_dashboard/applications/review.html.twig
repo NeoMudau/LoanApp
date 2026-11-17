@@ -1,0 +1,139 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <h1>Review Loan Application</h1>
+
+    <hr>
+
+    <h3>Customer Details</h3>
+
+    <p><strong>Name:</strong>
+        {{ application.customer.name }}
+        {{ application.customer.surname }}
+    </p>
+
+    <p><strong>Phone:</strong>
+        {{ application.customer.phone }}
+    </p>
+
+    <h3>Employment Details</h3>
+
+    {% if employment %}
+        <p><strong>Employer:</strong> {{ employment.name }}</p>
+        <p><strong>Position:</strong> {{ employment.position }}</p>
+        <p><strong>Employment Duration:</strong> {{ employment.duration }}</p>
+        <p><strong>Monthly Salary:</strong>
+            R {{ monthlyIncome|number_format(2, '.', ',') }}
+        </p>
+    {% else %}
+        <p>No employment details available.</p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Monthly Expenses</h3>
+
+    {% if expenses is not empty %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense.category }}</td>
+                        <td>{{ expense.description ?? '-' }}</td>
+                        <td>
+                            R {{ expense.amount|number_format(2, '.', ',') }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No monthly expenses recorded.</p>
+    {% endif %}
+
+    <p><strong>Total Monthly Expenses:</strong>
+        R {{ totalExpenses|number_format(2, '.', ',') }}
+    </p>
+
+    <hr>
+
+    <h3>Affordability Assessment</h3>
+
+    <p><strong>Monthly Income:</strong>
+        R {{ monthlyIncome|number_format(2, '.', ',') }}
+    </p>
+
+    <p><strong>Disposable Income:</strong>
+        R {{ disposableIncome|number_format(2, '.', ',') }}
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Scenario</th>
+                <th>Repayment Capacity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>30%</td>
+                <td>R {{ scenario30|number_format(2, '.', ',') }}</td>
+            </tr>
+            <tr>
+                <td>40%</td>
+                <td>R {{ scenario40|number_format(2, '.', ',') }}</td>
+            </tr>
+            <tr>
+                <td>50%</td>
+                <td>R {{ scenario50|number_format(2, '.', ',') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h3>Loan Application</h3>
+
+    <p><strong>Requested Amount:</strong>
+        R {{ application.requestedAmount|number_format(2, '.', ',') }}
+    </p>
+
+    <p><strong>Requested Term:</strong>
+        {{ application.requestedTermMonths }} months
+    </p>
+
+    <p>
+        <strong>Status:</strong>
+        {{ application.status }}
+    </p>
+
+    {% if application.status == 'SUBMITTED' %}
+        <form method="post"
+            action="{{ path('admin_loan_application_start_review', {
+                id: application.id
+            }) }}">
+
+            <input type="hidden"
+                name="_token"
+                value="{{ csrf_token('start_review_' ~ application.id) }}">
+
+            <button type="submit" class="btn btn-primary">
+                Start Review
+            </button>
+        </form>
+
+    {% elseif application.status == 'UNDER_REVIEW' %}
+        <p>Administrator is reviewing this application.</p>
+    {% endif %}
+
+</div>
+{% endblock %}
